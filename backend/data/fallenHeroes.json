@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "name": "Name Placeholder I",
+    "rank": "Lieutenant Commander",
+    "dateOfBirth": "Placeholder — DD/MM/YYYY",
+    "dateOfDeath": "Placeholder — DD/MM/YYYY",
+    "bio": "Biodata placeholder. Add this officer's service history, polo achievements, and a short tribute here once details are confirmed by the Team."
+  },
+  {
+    "id": 2,
+    "name": "Name Placeholder II",
+    "rank": "Sub-Lieutenant",
+    "dateOfBirth": "Placeholder — DD/MM/YYYY",
+    "dateOfDeath": "Placeholder — DD/MM/YYYY",
+    "bio": "Biodata placeholder. Add this officer's service history, polo achievements, and a short tribute here once details are confirmed by the Team."
+  },
+  {
+    "id": 3,
+    "name": "Name Placeholder III",
+    "rank": "Petty Officer",
+    "dateOfBirth": "Placeholder — DD/MM/YYYY",
+    "dateOfDeath": "Placeholder — DD/MM/YYYY",
+    "bio": "Biodata placeholder. Add this officer's service history, polo achievements, and a short tribute here once details are confirmed by the Team."
+  },
+  {
+    "id": 4,
+    "name": "Name Placeholder IV",
+    "rank": "Lieutenant",
+    "dateOfBirth": "Placeholder — DD/MM/YYYY",
+    "dateOfDeath": "Placeholder — DD/MM/YYYY",
+    "bio": "Biodata placeholder. Add this officer's service history, polo achievements, and a short tribute here once details are confirmed by the Team."
+  },
+  {
+    "id": 5,
+    "name": "Name Placeholder V",
+    "rank": "Chief Petty Officer",
+    "dateOfBirth": "Placeholder — DD/MM/YYYY",
+    "dateOfDeath": "Placeholder — DD/MM/YYYY",
+    "bio": "Biodata placeholder. Add this officer's service history, polo achievements, and a short tribute here once details are confirmed by the Team."
+  }
+]

@@ -1,0 +1,42 @@
+[
+  {
+    "id": "gallery-2",
+    "src": "assets/img/gallery-2.jpeg",
+    "alt": "Officers and members of the Nigerian Navy Polo Team",
+    "label": "Nigerian Navy Polo Team",
+    "caption": "Officers and members of the Team at the Naval Headquarters.",
+    "featured": true
+  },
+  {
+    "id": "gallery-1",
+    "src": "assets/img/gallery-1.jpeg",
+    "alt": "The Nigerian Navy Polo Team presenting the T.Y. Danjuma Cup to the Chief of Naval Staff",
+    "label": "T.Y. Danjuma Cup",
+    "caption": "The polo team presents the T.Y. Danjuma Cup to the Chief of Naval Staff.",
+    "featured": true
+  },
+  {
+    "id": "gallery-3",
+    "src": "assets/img/gallery-3.jpeg",
+    "alt": "Riding boots presented to the Chief of Naval Staff",
+    "label": "Ceremonial Presentation",
+    "caption": "Riding boots presented to the Chief of Naval Staff.",
+    "featured": true
+  },
+  {
+    "id": "gallery-4",
+    "src": "assets/img/gallery-4.jpeg",
+    "alt": "The Chief of Naval Staff with the T.Y. Danjuma Cup",
+    "label": "T.Y. Danjuma Cup",
+    "caption": "The Chief of Naval Staff with the T.Y. Danjuma Cup.",
+    "featured": true
+  },
+  {
+    "id": "gallery-5",
+    "src": "assets/img/gallery-5.jpeg",
+    "alt": "The T.Y. Danjuma Cup presented to the Chief of Naval Staff",
+    "label": "T.Y. Danjuma Cup",
+    "caption": "The T.Y. Danjuma Cup presented to the Chief of Naval Staff.",
+    "featured": true
+  }
+]

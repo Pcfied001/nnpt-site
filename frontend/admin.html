@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Secretariat Admin — Nigerian Navy Polo Team</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/webp" href="assets/img/logo.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Work+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  body{ background:var(--navy-deep); }
+  .admin-wrap{ max-width:1100px; margin:0 auto; padding:56px 24px 100px; }
+  .admin-header{ margin-bottom:36px; }
+  .admin-header span.mono{ color:var(--gold); }
+  .admin-header h1{ color:var(--parchment); margin:6px 0 8px; }
+  .admin-header p{ color:var(--mist); max-width:640px; line-height:1.6; }
+  .admin-warning{
+    background:rgba(198,161,91,0.1); border:1px solid rgba(198,161,91,0.35);
+    color:var(--gold-bright); padding:16px 20px; font-size:0.88rem; line-height:1.6;
+    margin-bottom:36px;
+  }
+  .admin-table-wrap{ overflow-x:auto; border:1px solid rgba(198,161,91,0.18); }
+  table.admin-table{ width:100%; border-collapse:collapse; font-size:0.88rem; }
+  table.admin-table th, table.admin-table td{
+    padding:12px 14px; text-align:left; border-bottom:1px solid rgba(198,161,91,0.12);
+    color:var(--mist-bright); white-space:nowrap;
+  }
+  table.admin-table th{
+    font-family:'JetBrains Mono', monospace; font-size:0.68rem; letter-spacing:0.06em;
+    text-transform:uppercase; color:var(--gold); background:rgba(255,255,255,0.02);
+  }
+  table.admin-table tr:hover td{ background:rgba(255,255,255,0.02); }
+  .badge{
+    display:inline-block; padding:3px 10px; font-size:0.68rem; font-family:'JetBrains Mono', monospace;
+    letter-spacing:0.04em; border:1px solid; text-transform:uppercase;
+  }
+  .badge-civilian{ color:#8CB3D9; border-color:#8CB3D9; }
+  .badge-serviceman{ color:var(--gold); border-color:var(--gold); }
+  .slip-link{
+    display:inline-block; padding:6px 14px; font-size:0.78rem; font-family:'JetBrains Mono', monospace;
+    color:var(--navy-deep); background:var(--gold); text-decoration:none;
+  }
+  .slip-link:hover{ background:var(--gold-bright); }
+  .slip-missing{ color:var(--mist); font-size:0.78rem; font-style:italic; }
+  .card-toggle{
+    display:inline-block; padding:6px 14px; font-size:0.75rem; font-family:'JetBrains Mono', monospace;
+    letter-spacing:0.02em; background:transparent; color:var(--mist-bright);
+    border:1px solid rgba(198,161,91,0.4); cursor:pointer;
+  }
+  .card-toggle:hover{ border-color:var(--gold); color:var(--gold); }
+  .card-toggle.is-printed{ background:rgba(198,161,91,0.15); border-color:var(--gold); color:var(--gold-bright); }
+  .card-toggle:disabled{ opacity:0.6; cursor:default; }
+  .card-timestamp{ margin-top:4px; font-size:0.68rem; color:var(--mist); }
+  .admin-empty{ color:var(--mist); padding:40px; text-align:center; border:1px dashed rgba(198,161,91,0.25); }
+  .admin-section{ margin-top:56px; }
+  .admin-section h2{ color:var(--parchment); font-size:1.4rem; margin-bottom:16px; }
+</style>
+</head>
+<body>
+
+<div class="admin-wrap">
+  <div class="admin-header">
+    <span class="mono">Secretariat Only</span>
+    <h1>Membership Applications &amp; Premium Slips</h1>
+    <p>Internal record of membership applications submitted through the website, with a downloadable Membership Premium Slip for each. Slips are generated automatically on submission — nothing here is ever sent to an applicant automatically.</p>
+  </div>
+
+  <div id="applicationsWrap">
+    <div class="admin-empty">Loading applications…</div>
+  </div>
+
+  <div class="admin-section">
+    <h2>Contact Enquiries</h2>
+    <div id="enquiriesWrap">
+      <div class="admin-empty">Loading enquiries…</div>
+    </div>
+  </div>
+</div>
+
+<script>
+function escapeHtml(str) {
+  if (str === undefined || str === null) return '';
+  return String(str).replace(/[&<>"']/g, function (c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+  });
+}
+
+function formatDate(iso) {
+  try {
+    return new Date(iso).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' });
+  } catch (e) {
+    return iso;
+  }
+}
+
+function renderApplications(applications) {
+  var wrap = document.getElementById('applicationsWrap');
+  if (!applications.length) {
+    wrap.innerHTML = '<div class="admin-empty">No membership applications submitted yet.</div>';
+    return;
+  }
+
+  var rows = applications.slice().reverse().map(function (a) {
+    var badgeClass = a.applicantType === 'civilian' ? 'badge-civilian' : 'badge-serviceman';
+    var badgeLabel = a.applicantType === 'civilian' ? 'Civilian' : 'Naval Personnel';
+    var slipCell = a.slipGenerated
+      ? '<a class="slip-link" target="_blank" rel="noopener" href="/api/applications/' + a.id + '/slip">View Slip</a>'
+      : '<span class="slip-missing">Not generated</span>';
+
+    var printed = !!a.cardPrinted;
+    var cardCell = '<button type="button" class="card-toggle ' + (printed ? 'is-printed' : '') + '" data-id="' + a.id + '" data-printed="' + printed + '">' +
+      (printed ? '&#10003; Printed' : 'Mark Printed') + '</button>' +
+      (printed && a.cardPrintedAt ? '<div class="card-timestamp">' + formatDate(a.cardPrintedAt) + '</div>' : '');
+
+    return '<tr>' +
+      '<td>' + formatDate(a.submittedAt) + '</td>' +
+      '<td><span class="badge ' + badgeClass + '">' + badgeLabel + '</span></td>' +
+      '<td>' + escapeHtml(a.fullName) + '</td>' +
+      '<td>' + escapeHtml(a.email) + '</td>' +
+      '<td>' + escapeHtml(a.phone) + '</td>' +
+      '<td>' + escapeHtml(a.tier) + '</td>' +
+      '<td>' + escapeHtml(a.slipRef || '—') + '</td>' +
+      '<td>' + slipCell + '</td>' +
+      '<td>' + cardCell + '</td>' +
+      '</tr>';
+  }).join('');
+
+  wrap.innerHTML = '<div class="admin-table-wrap"><table class="admin-table">' +
+    '<thead><tr><th>Submitted</th><th>Type</th><th>Name</th><th>Email</th><th>Phone</th><th>Tier</th><th>Ref</th><th>Slip</th><th>Membership Card</th></tr></thead>' +
+    '<tbody>' + rows + '</tbody></table></div>';
+
+  wrap.querySelectorAll('.card-toggle').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var id = btn.getAttribute('data-id');
+      var currentlyPrinted = btn.getAttribute('data-printed') === 'true';
+      var nextValue = !currentlyPrinted;
+      btn.disabled = true;
+      btn.textContent = 'Saving…';
+
+      fetch('/api/applications/' + id, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cardPrinted: nextValue })
+      })
+        .then(function (res) {
+          if (!res.ok) throw new Error('Update failed');
+          return res.json();
+        })
+        .then(function () {
+          return fetch('/api/applications').then(function (r) { return r.json(); });
+        })
+        .then(renderApplications)
+        .catch(function () {
+          btn.disabled = false;
+          btn.textContent = currentlyPrinted ? '\u2713 Printed' : 'Mark Printed';
+          alert('Could not update card status. Please try again.');
+        });
+    });
+  });
+}
+
+function renderEnquiries(enquiries) {
+  var wrap = document.getElementById('enquiriesWrap');
+  if (!enquiries.length) {
+    wrap.innerHTML = '<div class="admin-empty">No contact enquiries submitted yet.</div>';
+    return;
+  }
+
+  var rows = enquiries.slice().reverse().map(function (e) {
+    return '<tr>' +
+      '<td>' + formatDate(e.submittedAt) + '</td>' +
+      '<td>' + escapeHtml(e.name) + '</td>' +
+      '<td>' + escapeHtml(e.email) + '</td>' +
+      '<td>' + escapeHtml(e.subject) + '</td>' +
+      '<td style="white-space:normal; max-width:320px;">' + escapeHtml(e.message) + '</td>' +
+      '</tr>';
+  }).join('');
+
+  wrap.innerHTML = '<div class="admin-table-wrap"><table class="admin-table">' +
+    '<thead><tr><th>Submitted</th><th>Name</th><th>Email</th><th>Subject</th><th>Message</th></tr></thead>' +
+    '<tbody>' + rows + '</tbody></table></div>';
+}
+
+fetch('/api/applications')
+  .then(function (res) { return res.json(); })
+  .then(renderApplications)
+  .catch(function () {
+    document.getElementById('applicationsWrap').innerHTML =
+      '<div class="admin-empty">Couldn\'t load applications. Is the backend server running?</div>';
+  });
+
+fetch('/api/enquiries')
+  .then(function (res) { return res.json(); })
+  .then(renderEnquiries)
+  .catch(function () {
+    document.getElementById('enquiriesWrap').innerHTML =
+      '<div class="admin-empty">Couldn\'t load enquiries. Is the backend server running?</div>';
+  });
+</script>
+
+</body>
+</html>

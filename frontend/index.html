@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nigerian Navy Polo Team</title>
+<meta name="description" content="The official website of the Nigerian Navy Polo Team — bringing together serving officers, veterans, and the polo community under one mandate of discipline, sportsmanship, and camaraderie.">
+<link rel="icon" type="image/webp" href="assets/img/logo.webp">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Nigerian Navy Polo Team">
+<meta property="og:description" content="The official website of the Nigerian Navy Polo Team — bringing together serving officers, veterans, and the polo community under one mandate of discipline, sportsmanship, and camaraderie.">
+<meta property="og:image" content="assets/img/logo.webp">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Work+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<a class="skip-link" href="#top">Skip to main content</a>
+
+<div class="site-preloader" id="sitePreloader" aria-hidden="true">
+  <img class="site-preloader-crest" src="assets/img/logo.webp" alt="">
+  <span class="site-preloader-text">Nigerian Navy Polo Team</span>
+</div>
+<script>
+(function () {
+  var alreadyVisited = sessionStorage.getItem('nnptVisited') === '1';
+  var MIN_MS = alreadyVisited ? 0 : 1600;
+  var start = Date.now();
+  function hidePreloader() {
+    var el = document.getElementById('sitePreloader');
+    if (!el) return;
+    el.classList.add('is-hidden');
+    setTimeout(function () {
+      if (el && el.parentNode) el.parentNode.removeChild(el);
+    }, alreadyVisited ? 0 : 550);
+  }
+  function whenReady() {
+    sessionStorage.setItem('nnptVisited', '1');
+    var remaining = Math.max(MIN_MS - (Date.now() - start), 0);
+    setTimeout(hidePreloader, remaining);
+  }
+  if (alreadyVisited) {
+    hidePreloader();
+  } else if (document.readyState === 'complete') {
+    whenReady();
+  } else {
+    window.addEventListener('load', whenReady);
+  }
+})();
+</script>
+
+<header>
+  <div class="nav-inner">
+    <a href="#top" class="brand">
+      <img class="brand-crest" src="assets/img/logo.webp" alt="Nigerian Navy Crest">
+      <span class="brand-text">
+        <span class="name">Nigerian Navy Polo Team</span>
+        <span class="tag">Est. 2021</span>
+      </span>
+    </a>
+    <nav>
+      <ul>
+        <li><a href="#about">About</a></li>
+        <li class="nav-dropdown">
+          <a href="membership.html">Membership</a>
+          <ul class="nav-dropdown-menu">
+            <li><a href="membership.html">Membership Tiers</a></li>
+            <li><a href="apply.html">Apply Now</a></li>
+          </ul>
+        </li>
+        <li><a href="#fixtures">Fixtures</a></li>
+        <li><a href="#news">News</a></li>
+        <li><a href="contact.html">Contact</a></li>
+
+        <!-- Shown flat on mobile; folded into the "Heritage & Honours" dropdown on desktop -->
+        <li class="nav-secondary"><a href="#history">Heritage</a></li>
+        <li class="nav-secondary"><a href="fallen-heroes.html">Fallen Heroes</a></li>
+        <li class="nav-secondary"><a href="trophies.html">Trophies</a></li>
+        <li class="nav-secondary"><a href="gallery.html">Gallery</a></li>
+
+        <li class="nav-more">
+          <button type="button" class="nav-more-toggle" aria-haspopup="true" aria-expanded="false">
+            Heritage &amp; Honours
+            <svg class="nav-more-caret" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1.5 6 6.5 11 1.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <ul class="nav-more-menu">
+            <li><a href="#history">Heritage</a></li>
+            <li><a href="fallen-heroes.html">Fallen Heroes</a></li>
+            <li><a href="trophies.html">Trophies</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+    <span class="nav-divider"></span>
+    <a href="apply.html" class="cta-btn">Become a Member</a>
+    <button class="menu-toggle" aria-label="Toggle menu">&#9776;</button>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- FEATURED PHOTO SLIDESHOW -->
+  <section class="featured-photo" id="featuredSlideshow">
+    <div class="f-slide active">
+      <img width="1400" height="932" src="assets/img/gallery-2.jpeg" alt="Officers and members of the Nigerian Navy Polo Team">
+      <div class="featured-caption">
+        <span class="mono">Nigerian Navy Polo Team</span>
+        <p>Officers and members of the Team at the Naval Headquarters.</p>
+      </div>
+    </div>
+    <div class="f-slide">
+      <img loading="lazy" width="1280" height="852" src="assets/img/gallery-1.jpeg" alt="The Nigerian Navy Polo Team presenting the T.Y. Danjuma Cup to the Chief of Naval Staff">
+      <div class="featured-caption">
+        <span class="mono">T.Y. Danjuma Cup</span>
+        <p>The polo team presents the T.Y. Danjuma Cup to the Chief of Naval Staff.</p>
+      </div>
+    </div>
+    <div class="f-slide">
+      <img loading="lazy" width="1400" height="875" src="assets/img/gallery-3.jpeg" alt="Riding boots presented to the Chief of Naval Staff">
+      <div class="featured-caption">
+        <span class="mono">Ceremonial Presentation</span>
+        <p>Riding boots presented to the Chief of Naval Staff.</p>
+      </div>
+    </div>
+    <div class="f-slide">
+      <img loading="lazy" width="1400" height="932" src="assets/img/gallery-4.jpeg" alt="The Chief of Naval Staff with the T.Y. Danjuma Cup">
+      <div class="featured-caption">
+        <span class="mono">T.Y. Danjuma Cup</span>
+        <p>The Chief of Naval Staff with the T.Y. Danjuma Cup.</p>
+      </div>
+    </div>
+    <div class="f-slide">
+      <img loading="lazy" width="1400" height="932" src="assets/img/gallery-5.jpeg" alt="The T.Y. Danjuma Cup presented to the Chief of Naval Staff">
+      <div class="featured-caption">
+        <span class="mono">T.Y. Danjuma Cup</span>
+        <p>The T.Y. Danjuma Cup presented to the Chief of Naval Staff.</p>
+      </div>
+    </div>
+    <button class="slide-nav slide-prev" aria-label="Previous slide">&#10094;</button>
+    <button class="slide-nav slide-next" aria-label="Next slide">&#10095;</button>
+    <div class="slide-dots" id="featuredSlideshowDots"></div>
+  </section>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-eyebrow mono">Est. Nigerian Navy · Field &amp; Fleet</div>
+        <h1>Discipline of the <em>Fleet</em>,<br>Spirit of the <em>Field</em>.</h1>
+        <p class="lede">The Nigerian Navy Polo Team brings together serving officers, veterans and members of the polo community under one mandate: sportsmanship, camaraderie, and the naval tradition of excellence — on horseback.</p>
+        <div class="hero-ctas">
+          <a href="membership.html" class="btn-primary">Join the Team</a>
+          <a href="#fixtures" class="btn-ghost">View Fixtures</a>
+        </div>
+        <div class="stat-line">
+          <div><span class="num">04</span><span class="lbl">Naval Command Chapters</span></div>
+          <div><span class="num">120+</span><span class="lbl">Active Members</span></div>
+          <div><span class="num">15</span><span class="lbl">Annual Tournaments</span></div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="compass-ring">
+          <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="200" cy="200" r="188" fill="none" stroke="#C6A15B" stroke-width="1" opacity="0.5"/>
+            <circle cx="200" cy="200" r="150" fill="none" stroke="#C6A15B" stroke-width="1" opacity="0.3"/>
+            <g class="needle">
+              <path d="M200 60 L216 200 L200 340 L184 200 Z" fill="#C6A15B" opacity="0.85"/>
+              <path d="M60 200 L200 216 L340 200 L200 184 Z" fill="#C6A15B" opacity="0.35"/>
+            </g>
+            <path d="M140 250 Q200 220 260 250" fill="none" stroke="#EFE9DC" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="200" cy="200" r="10" fill="#0B1E33" stroke="#EFE9DC" stroke-width="1.5"/>
+            <text x="200" y="45" text-anchor="middle" fill="#8CA2B3" font-family="JetBrains Mono, monospace" font-size="11" letter-spacing="2">N</text>
+            <text x="200" y="368" text-anchor="middle" fill="#8CA2B3" font-family="JetBrains Mono, monospace" font-size="11" letter-spacing="2">S</text>
+            <text x="30" y="205" text-anchor="middle" fill="#8CA2B3" font-family="JetBrains Mono, monospace" font-size="11" letter-spacing="2">W</text>
+            <text x="370" y="205" text-anchor="middle" fill="#8CA2B3" font-family="JetBrains Mono, monospace" font-size="11" letter-spacing="2">E</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ABOUT -->
+  <section class="about section-light" id="about">
+    <div class="wrap">
+      <div class="about-grid">
+        <div>
+          <span class="mono about-eyebrow">About the Team</span>
+          <h2 class="about-title">A tradition carried from the wardroom to the field</h2>
+          <p class="lead">The Nigerian Navy Polo Team was formed to preserve and grow the sport of polo within the Naval community, extending the same values of precision, teamwork and command that define service at sea.</p>
+          <p>Membership is open to serving and retired naval officers, their families, and civilian polo enthusiasts who share our commitment to the sport's traditions. We organise regular chukkas, coach emerging players, and represent the Navy at national and international tournaments.</p>
+        </div>
+        <div class="pillars">
+          <div class="pillar">
+            <svg class="pillar-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="20" cy="20" r="18" stroke="currentColor" stroke-width="1.4"/><path d="M20 10v10l7 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+            <div><h4>Discipline</h4><p>Naval precision brought to every chukka, every match, every season.</p></div>
+          </div>
+          <div class="pillar">
+            <svg class="pillar-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 6l4 8 9 1-6.5 6.5L28 30l-8-4-8 4 1.5-8.5L7 15l9-1 4-8z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+            <div><h4>Excellence</h4><p>Coaching and competition pathways for players at every level.</p></div>
+          </div>
+          <div class="pillar">
+            <svg class="pillar-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 30c4-10 8-16 12-16s8 6 12 16" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="20" cy="10" r="4" stroke="currentColor" stroke-width="1.4"/></svg>
+            <div><h4>Camaraderie</h4><p>A fellowship of officers and civilians united by the field.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HISTORY -->
+  <section id="history">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="mono">Heritage</span>
+        <h2>Milestones on the field</h2>
+        <p>From its founding chukka to national recognition — the story of the Team is written year by year.</p>
+      </div>
+      <div class="timeline">
+        <div class="t-item">
+          <div class="t-year">2021</div>
+          <div class="t-dot"></div>
+          <div><h4>Introduced to the Game</h4><p>The Nigerian Navy was introduced to polo by the Nigerian Army's 21 Guards Brigade Polo Club, and the Nigerian Navy Polo Team was formally established under the tenure of then Chief of Naval Staff, Vice Admiral Awwal Zubairu Gambo, to build camaraderie, sportsmanship, and discipline through the game.</p></div>
+        </div>
+        <div class="t-item">
+          <div class="t-year">2022</div>
+          <div class="t-dot"></div>
+          <div><h4>First Trophy — The TY Danjuma Cup</h4><p>In its maiden appearance at the Port Harcourt International Polo Tournament, the Navy team won the prestigious TY Danjuma Cup — the young team's first trophy.</p></div>
+        </div>
+        <div class="t-item">
+          <div class="t-year">2023</div>
+          <div class="t-dot"></div>
+          <div><h4>Trophy Cabinet Grows</h4><p>The Navy team returned to Port Harcourt to successfully defend the TY Danjuma Cup and added the O.B. Lulu Briggs Cup, fielding two strong teams in the tournament.</p></div>
+        </div>
+        <div class="t-item">
+          <div class="t-year">2026</div>
+          <div class="t-dot"></div>
+          <div><h4>70th Anniversary Novelty Match</h4><p>The team marked the Nigerian Navy's 70th anniversary with a polo novelty match at the Guards Polo Club in Abuja, part of celebrations honouring seven decades of naval service. Team NNS Aradu was crowned champion on the day.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- FIXTURES -->
+  <section id="fixtures" class="section-light">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="mono">Fixtures</span>
+        <h2>Upcoming matches</h2>
+        <p>Match dates and venues for the current season. Entry status updates as tournaments approach.</p>
+      </div>
+      <table class="fixtures-table">
+        <thead>
+          <tr><th>Date</th><th>Fixture</th><th>Venue</th><th>Entry</th></tr>
+        </thead>
+        <tbody id="fixturesTableBody">
+        </tbody>
+      </table>
+      <a href="fixtures.html" class="btn-ghost fixtures-view-all">View Full Fixtures List</a>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- NEWS -->
+  <section class="news" id="news">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="mono">News &amp; Announcements</span>
+        <h2>From the club house</h2>
+      </div>
+      <div class="news-grid">
+        <div class="news-card">
+          <div class="news-thumb"><svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 6l4 8 9 1-6.5 6.5L28 30l-8-4-8 4 1.5-8.5L7 15l9-1 4-8z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></div>
+          <div class="news-body">
+            <span class="news-date">Tournament Result</span>
+            <h4>Lagos MSD Babybear Wins the CNS Cup at Lagos Polo Club Tournament 2025</h4>
+            <p>The final of the Chief of the Naval Staff (CNS) Cup at the 2025 Lagos Polo Club Tournament was played on 22 February 2025, with Lagos MSD Babybear defeating Ibadan Durante 6&ndash;3. The CNS, Vice Admiral Emmanuel Ikechukwu Ogalla, was ably represented by the Command Staff Officer Western Naval Command, Rear Admiral SD Ibrahim, who presented the trophy and emphasised the CNS's continued commitment to investing in sports to enhance the physical and mental well-being of Nigerian Navy personnel and to promote the prestige of the organisation. He was accompanied by the Chairman of the NN Polo Team, Rear Admiral OBF Oladipo, Command Information Officer Western Naval Command Commander A Ahmed, NN Polo Team member Lieutenant Commander AOS Ogunshola, Managing Director of Messi Ocean Mr. Kunle Aluko, and Mr. Wilson of Wilson Aviation.</p>
+          </div>
+        </div>
+        <div class="news-card">
+          <div class="news-thumb-photo"><img width="1080" height="864" src="assets/img/gallery-12.jpg" alt="Nigerian Navy Polo Team and opponents saluting with mallets raised after the 2024 Port Harcourt International Polo Tournament" loading="lazy"></div>
+          <div class="news-body">
+            <span class="news-date">Tournament Result</span>
+            <h4>Navy Wins the Chairborne Cup at Port Harcourt 2024</h4>
+            <p>The Nigerian Navy Polo Team topped a 10-team field to win the Chairborne Cup at the 2024 Port Harcourt International Polo Tournament, held 14–21 January. See more from the tournament in the <a href="gallery.html">Gallery</a>.</p>
+          </div>
+        </div>
+        <div class="news-card">
+          <div class="news-thumb"><svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 30c4-10 8-16 12-16s8 6 12 16" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="20" cy="10" r="4" stroke="currentColor" stroke-width="1.4"/></svg></div>
+          <div class="news-body">
+            <span class="news-date">Season Update</span>
+            <h4>Registration Opens for the Navy Cup</h4>
+            <p>Members can now register teams for the season's opening tournament. Deadline applies for kit sizing and mount allocation.</p>
+          </div>
+        </div>
+        <div class="news-card">
+          <div class="news-thumb"><svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="20" cy="20" r="18" stroke="currentColor" stroke-width="1.4"/><path d="M20 10v10l7 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></div>
+          <div class="news-body">
+            <span class="news-date">Coaching</span>
+            <h4>New Coaching Clinic for Junior Members</h4>
+            <p>A structured coaching programme begins this quarter for junior and beginner members across all chapters.</p>
+          </div>
+        </div>
+        <div class="news-card">
+          <div class="news-thumb"><svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 6l4 8 9 1-6.5 6.5L28 30l-8-4-8 4 1.5-8.5L7 15l9-1 4-8z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></div>
+          <div class="news-body">
+            <span class="news-date">Tournament Result</span>
+            <h4>Navy Marks 70th Anniversary with Polo Novelty Match</h4>
+            <p>The Nigerian Navy added polo to celebrations for its 70th anniversary with a novelty match at the Guards Polo Club in Abuja. Team NNS Aradu emerged champions on the day, with former Chief of Naval Staff Vice Admiral Awwal Zubairu Gambo — who established the Navy's polo team in 2021 — commending the occasion.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- LEADERSHIP -->
+  <section id="leadership" class="section-light">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="mono">Leadership</span>
+        <h2>Patron, Pioneer, Chairman &amp; Captain</h2>
+        <p>The individuals who provide direction and leadership for the Team.</p>
+      </div>
+      <div class="leadership-duo">
+        <div class="patron-feature">
+          <span class="hero-rank mono">Patron</span>
+          <div class="patron-portrait">
+            <img loading="lazy" width="800" height="984" src="assets/img/coas-i-abbas-portrait.jpg" alt="Vice Admiral I Abbas, Chief of the Naval Staff and Patron of the Nigerian Navy Polo Team">
+          </div>
+          <div class="patron-info">
+            <h3>Vice Admiral I Abbas</h3>
+            <p class="patron-honours mono">AM &middot; DGSM &middot; GSS &middot; psc &middot; fdc &middot; MSc &middot; MNIM</p>
+            <p class="patron-title">Chief of the Naval Staff</p>
+            <div class="patron-rule"></div>
+            <p class="patron-note">As Patron, Vice Admiral I Abbas provides guidance and support for the Nigerian Navy Polo Team, upholding a tradition of discipline and excellence carried from the parade ground to the field of play.</p>
+          </div>
+        </div>
+        <div class="patron-feature">
+          <span class="hero-rank mono">Pioneer</span>
+          <div class="patron-portrait">
+            <img loading="lazy" width="1400" height="1400" src="assets/img/az-gambo-portrait.jpg" alt="Vice Admiral Awwal Zubairu Gambo, Pioneer President of the Nigerian Navy Polo Team">
+          </div>
+          <div class="patron-info">
+            <h3>Vice Admiral Awwal Zubairu Gambo (Rtd)</h3>
+            <p class="patron-honours mono">CFR &middot; psc &middot; AM &middot; GSS &middot; ensp(RSA) &middot; MTM &middot; MNIM &middot; MUSNI &middot; FCIS &middot; FIIPS &middot; FCAI</p>
+            <p class="patron-title">Pioneer President</p>
+            <div class="patron-rule"></div>
+            <p class="patron-note">Vice Admiral Awwal Zubairu Gambo established the Nigerian Navy Polo Team in 2021, laying the foundation for the Team's tradition of discipline and excellence on the field of play.</p>
+          </div>
+        </div>
+        <div class="patron-feature">
+          <span class="hero-rank mono">Chairman</span>
+          <div class="patron-portrait">
+            <img loading="lazy" width="848" height="1000" src="assets/img/chairman-oladipo.jpg" alt="Rear Admiral Olugbenga Bidemi Oladipo, Chairman of the Nigerian Navy Polo Team">
+          </div>
+          <div class="patron-info">
+            <h3>Rear Admiral Olugbenga Bidemi Oladipo</h3>
+            <p class="patron-honours mono">FSS &middot; psc &middot; MSS &middot; FDC &middot; DSS</p>
+            <p class="patron-title">Chairman, Nigerian Navy Polo Team</p>
+          </div>
+        </div>
+      </div>
+      <div class="heroes-grid">
+        <div class="hero-card">
+          <div class="hero-photo">
+            <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="30" cy="22" r="11" stroke="currentColor" stroke-width="1.4"/><path d="M10 52c3-13 10-19 20-19s17 6 20 19" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          </div>
+          <div class="hero-info">
+            <span class="hero-rank mono">Captain</span>
+            <h4>Captain Armayau Yusuf</h4>
+            <p class="hero-dates mono">Team Captain</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img class="brand-crest" src="assets/img/logo.webp" alt="Nigerian Navy Crest">
+        <span>Nigerian Navy Polo Team</span>
+      </div>
+      <div class="footer-links">
+        <div>
+          <h5>Team</h5>
+          <ul>
+            <li><a href="#about">About</a></li>
+            <li><a href="#history">Heritage</a></li>
+            <li><a href="membership.html">Membership</a></li>
+          </ul>
+        </div>
+        <div>
+          <h5>Activity</h5>
+          <ul>
+            <li><a href="#fixtures">Fixtures</a></li>
+            <li><a href="fixtures.html">Full Fixtures List</a></li>
+            <li><a href="#news">News</a></li>
+            <li><a href="fallen-heroes.html">Fallen Heroes</a></li>
+            <li><a href="trophies.html">Trophies</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Nigerian Navy Polo Team. All rights reserved.</p>
+      <p class="mono" style="color:var(--mist);">Field &amp; Fleet</p>
+    </div>
+  </div>
+</footer>
+
+<script src="js/gallery-data.js"></script>
+<script src="js/fixtures-data.js"></script>
+<script src="js/script.js"></script>
+
+</body>
+</html>

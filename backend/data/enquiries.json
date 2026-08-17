@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "submittedAt": "2026-08-17T22:14:57.374Z",
+    "name": "Faruk",
+    "email": "abubakarfumar2019@gmail.com",
+    "subject": "Full",
+    "message": "contribution",
+    "status": "unread",
+    "confirmationEmailSent": false,
+    "confirmationEmailError": "Connection closed unexpectedly"
+  },
+  {
+    "id": 2,
+    "submittedAt": "2026-08-17T22:28:24.358Z",
+    "name": "Umar",
+    "email": "abubakarfumar2019@gmail.com",
+    "subject": "full ",
+    "message": "sssss",
+    "status": "unread",
+    "confirmationEmailSent": true
+  }
+]
