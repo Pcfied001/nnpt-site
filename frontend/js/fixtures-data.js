@@ -28,14 +28,14 @@ var NNPT_FIXTURES = [
     dateLabel: 'NOV 22',
     fixture: "Fleet Officers' Invitational",
     venue: 'Kaduna Polo Club',
-    status: 'closed'
+    status: 'open'
   },
   {
     id: 'fx-4',
     dateLabel: 'DEC 14',
     fixture: 'Team Anniversary Cup',
     venue: 'Guards Polo Club Abuja',
-    status: 'open'
+    status: 'closed'
   }
 ];
 
