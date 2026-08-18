@@ -1,37 +1,20 @@
-const nodemailer = require('nodemailer');
 const path = require('path');
+const BREVO_ENDPOINT = 'https://api.brevo.com/v3/smtp/email';
+const CREST_URL = process.env.PUBLIC_SITE_URL
+  ? `${process.env.PUBLIC_SITE_URL.replace(/\/$/, '')}/assets/nn-crest.png`
+  : '/assets/nn-crest.png';
 
-const CREST_PATH = path.join(__dirname, '..', 'assets', 'nn-crest.png');
-
-// confirmation emails to applicants/enquirers, not the internal slip.
-// needs SMTP_HOST/USER/PASS in .env or it just no-ops (see .env.example)
-
-let transporter = null;
 let warned = false;
 
 function isConfigured() {
-  return !!(process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS);
-}
-
-function getTransporter() {
-transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT) || 587,
-    secure: Number(process.env.SMTP_PORT) === 465,
-    auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS
-    },
-    family: 4
-  });
-  return transporter;
+  return !!(process.env.BREVO_API_KEY && process.env.BREVO_FROM_EMAIL);
 }
 
 function warnIfNotConfigured() {
   if (warned || isConfigured()) return;
   console.warn(
-    '\n[NNPT] SMTP not configured, skipping confirmation emails. ' +
-    'Add SMTP_HOST/SMTP_USER/SMTP_PASS to .env if you want this on.\n'
+    '\n[NNPT] Brevo not configured, skipping confirmation emails. ' +
+    'Add BREVO_API_KEY/BREVO_FROM_EMAIL to .env if you want this on.\n'
   );
   warned = true;
 }
@@ -44,18 +27,27 @@ async function sendMail({ to, subject, html, text }) {
     return { sent: false, reason: 'not_configured' };
   }
   try {
-    await getTransporter().sendMail({
-      from: `"${FROM_NAME}" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
-      to,
-      subject,
-      text,
-      html,
-      attachments: [{
-        filename: 'nn-crest.png',
-        path: CREST_PATH,
-        cid: 'nncrest' // used as src="cid:nncrest" below
-      }]
+    const res = await fetch(BREVO_ENDPOINT, {
+      method: 'POST',
+      headers: {
+        'api-key': process.env.BREVO_API_KEY,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        sender: { name: FROM_NAME, email: process.env.BREVO_FROM_EMAIL },
+        to: [{ email: to }],
+        subject,
+        htmlContent: html,
+        textContent: text
+      })
     });
+
+    if (!res.ok) {
+      const errBody = await res.text().catch(() => '');
+      throw new Error(`Brevo API ${res.status}: ${errBody}`);
+    }
+
     return { sent: true };
   } catch (err) {
     console.error('[NNPT] Failed to send confirmation email to', to, '—', err.message);
@@ -75,7 +67,7 @@ function sendEnquiryConfirmation(enquiry) {
   const html = `
     <div style="font-family:Arial,Helvetica,sans-serif; max-width:520px; margin:0 auto; color:#142A44;">
       <div style="background:#0B1E33; padding:24px 28px; text-align:center;">
-        <img src="cid:nncrest" alt="Nigerian Navy Crest" width="56" height="56" style="display:block; margin:0 auto 12px;">
+        <img src="${CREST_URL}" alt="Nigerian Navy Crest" width="56" height="56" style="display:block; margin:0 auto 12px;">
         <p style="color:#C6A15B; font-size:12px; letter-spacing:1px; text-transform:uppercase; margin:0 0 6px;">Nigerian Navy Polo Team</p>
         <h1 style="color:#EFE9DC; font-size:20px; margin:0;">Enquiry Received</h1>
       </div>
@@ -103,7 +95,7 @@ function sendApplicationConfirmation(application) {
   const html = `
     <div style="font-family:Arial,Helvetica,sans-serif; max-width:520px; margin:0 auto; color:#142A44;">
       <div style="background:#0B1E33; padding:24px 28px; text-align:center;">
-        <img src="cid:nncrest" alt="Nigerian Navy Crest" width="56" height="56" style="display:block; margin:0 auto 12px;">
+        <img src="${CREST_URL}" alt="Nigerian Navy Crest" width="56" height="56" style="display:block; margin:0 auto 12px;">
         <p style="color:#C6A15B; font-size:12px; letter-spacing:1px; text-transform:uppercase; margin:0 0 6px;">Nigerian Navy Polo Team</p>
         <h1 style="color:#EFE9DC; font-size:20px; margin:0;">Application Received</h1>
       </div>
