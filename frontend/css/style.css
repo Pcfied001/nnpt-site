@@ -456,9 +456,9 @@
   content:''; position:absolute; inset:5px; border-radius:50%; border:1px solid rgba(198,161,91,0.5); pointer-events:none;
 }
 .hero-info{ display:flex; flex-direction:column; align-items:center; gap:6px; }
-.hero-rank{ color:var(--oxblood); letter-spacing:0.08em; }
+.hero-rank{ color:var(--gold-bright); letter-spacing:0.1em; font-size:0.85rem; font-weight:600; }
 .hero-info h4{ color:var(--parchment); font-size:1.25rem; margin:2px 0 2px; }
-.hero-dates{ color:var(--mist); font-size:0.68rem; letter-spacing:0.04em; margin-bottom:14px; }
+.hero-dates{ color:var(--mist-bright); font-size:0.78rem; letter-spacing:0.04em; margin-bottom:14px; }
 .hero-btn{ padding:11px 22px; font-size:0.7rem; }
 .hero-btn:hover{ border-color:var(--oxblood); color:#C98A82; }
 
