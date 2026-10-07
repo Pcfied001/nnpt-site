@@ -1,5 +1,5 @@
 /* ============================================================
-   Nigerian Navy Polo Team — shared photo gallery
+   Nigerian Navy Polo Association — shared photo gallery
    Single source of truth for photos. The Gallery page lets you
    pick which of these appear in the homepage featured slideshow;
    the choice is remembered in this browser (localStorage) until
@@ -15,15 +15,15 @@ var NNPT_GALLERY_PHOTOS = [
   {
     id: 'gallery-2',
     src: 'assets/img/gallery-2.jpeg',
-    alt: 'Officers and members of the Nigerian Navy Polo Team',
-    label: 'Nigerian Navy Polo Team',
+    alt: 'Officers and members of the Nigerian Navy Polo Association',
+    label: 'Nigerian Navy Polo Association',
     caption: 'Officers and members of the Team at the Naval Headquarters.',
     defaultFeatured: true
   },
   {
     id: 'gallery-1',
     src: 'assets/img/gallery-1.jpeg',
-    alt: 'The Nigerian Navy Polo Team presenting the T.Y. Danjuma Cup to the Chief of Naval Staff',
+    alt: 'The Nigerian Navy Polo Association presenting the T.Y. Danjuma Cup to the Chief of Naval Staff',
     label: 'T.Y. Danjuma Cup',
     caption: 'The polo team presents the T.Y. Danjuma Cup to the Chief of Naval Staff.',
     defaultFeatured: true
@@ -54,11 +54,11 @@ var NNPT_GALLERY_PHOTOS = [
   },
 
   // 2024 Port Harcourt International Polo Tournament (14–21 Jan 2024) —
-  // the Nigerian Navy Polo Team won the Chairborne Cup, a 10-team event.
+  // the Nigerian Navy Polo Association won the Chairborne Cup, a 10-team event.
   {
     id: 'gallery-6',
     src: 'assets/img/gallery-6.jpg',
-    alt: 'Nigerian Navy Polo Team riders chasing the ball during the 2024 Port Harcourt International Polo Tournament',
+    alt: 'Nigerian Navy Polo Association riders chasing the ball during the 2024 Port Harcourt International Polo Tournament',
     label: 'Port Harcourt International Polo Tournament 2024',
     caption: 'The Navy team presses forward during the 2024 Port Harcourt International Polo Tournament, where they won the Chairborne Cup.',
     defaultFeatured: false
@@ -66,7 +66,7 @@ var NNPT_GALLERY_PHOTOS = [
   {
     id: 'gallery-7',
     src: 'assets/img/gallery-7.jpg',
-    alt: 'Nigerian Navy Polo Team player riding forward, mallet raised, at the 2024 Port Harcourt International Polo Tournament',
+    alt: 'Nigerian Navy Polo Association player riding forward, mallet raised, at the 2024 Port Harcourt International Polo Tournament',
     label: 'Port Harcourt International Polo Tournament 2024',
     caption: 'A Navy player breaks forward in the Chairborne Cup at the 2024 Port Harcourt International Polo Tournament.',
     defaultFeatured: false
@@ -74,7 +74,7 @@ var NNPT_GALLERY_PHOTOS = [
   {
     id: 'gallery-8',
     src: 'assets/img/gallery-8.jpg',
-    alt: 'Nigerian Navy Polo Team player in white jersey riding a chestnut horse at the 2024 Port Harcourt International Polo Tournament',
+    alt: 'Nigerian Navy Polo Association player in white jersey riding a chestnut horse at the 2024 Port Harcourt International Polo Tournament',
     label: 'Port Harcourt International Polo Tournament 2024',
     caption: 'Navy colours on the field during the Chairborne Cup at the 2024 Port Harcourt International Polo Tournament.',
     defaultFeatured: false
@@ -82,7 +82,7 @@ var NNPT_GALLERY_PHOTOS = [
   {
     id: 'gallery-9',
     src: 'assets/img/gallery-9.jpg',
-    alt: 'Nigerian Navy Polo Team players in a full swing during the 2024 Port Harcourt International Polo Tournament',
+    alt: 'Nigerian Navy Polo Association players in a full swing during the 2024 Port Harcourt International Polo Tournament',
     label: 'Port Harcourt International Polo Tournament 2024',
     caption: 'A full stretch shot on goal during the Chairborne Cup, 2024 Port Harcourt International Polo Tournament.',
     defaultFeatured: false
@@ -90,7 +90,7 @@ var NNPT_GALLERY_PHOTOS = [
   {
     id: 'gallery-10',
     src: 'assets/img/gallery-10.jpg',
-    alt: 'Nigerian Navy Polo Team player cantering across the field at the 2024 Port Harcourt International Polo Tournament',
+    alt: 'Nigerian Navy Polo Association player cantering across the field at the 2024 Port Harcourt International Polo Tournament',
     label: 'Port Harcourt International Polo Tournament 2024',
     caption: 'A Navy rider covers the field during the Chairborne Cup at the 2024 Port Harcourt International Polo Tournament.',
     defaultFeatured: false
@@ -106,15 +106,15 @@ var NNPT_GALLERY_PHOTOS = [
   {
     id: 'gallery-12',
     src: 'assets/img/gallery-12.jpg',
-    alt: 'Nigerian Navy Polo Team and opponents lined up with mallets raised at the 2024 Port Harcourt International Polo Tournament',
+    alt: 'Nigerian Navy Polo Association and opponents lined up with mallets raised at the 2024 Port Harcourt International Polo Tournament',
     label: 'Chairborne Cup Champions 2024',
-    caption: 'Teams salute at the close of play — the Nigerian Navy Polo Team went on to win the Chairborne Cup, a 10-team event, at the 2024 Port Harcourt International Polo Tournament.',
+    caption: 'Teams salute at the close of play — the Nigerian Navy Polo Association went on to win the Chairborne Cup, a 10-team event, at the 2024 Port Harcourt International Polo Tournament.',
     defaultFeatured: false
   },
   {
     id: 'gallery-13',
     src: 'assets/img/gallery-13.jpg',
-    alt: 'Nigerian Navy Polo Team and opponents lined up on the pitch at the 2024 Port Harcourt International Polo Tournament',
+    alt: 'Nigerian Navy Polo Association and opponents lined up on the pitch at the 2024 Port Harcourt International Polo Tournament',
     label: 'Chairborne Cup Champions 2024',
     caption: 'The competing teams line up on the pitch at the 2024 Port Harcourt International Polo Tournament.',
     defaultFeatured: false
@@ -122,7 +122,7 @@ var NNPT_GALLERY_PHOTOS = [
   {
     id: 'gallery-14',
     src: 'assets/img/gallery-14.jpg',
-    alt: 'Nigerian Navy Polo Team players grouped on the field at the 2024 Port Harcourt International Polo Tournament',
+    alt: 'Nigerian Navy Polo Association players grouped on the field at the 2024 Port Harcourt International Polo Tournament',
     label: 'Port Harcourt International Polo Tournament 2024',
     caption: 'The Navy team regroups during play at the 2024 Port Harcourt International Polo Tournament.',
     defaultFeatured: false
@@ -130,7 +130,7 @@ var NNPT_GALLERY_PHOTOS = [
   {
     id: 'gallery-15',
     src: 'assets/img/gallery-15.jpg',
-    alt: 'Nigerian Navy Polo Team in pursuit of the ball at the 2024 Port Harcourt International Polo Tournament',
+    alt: 'Nigerian Navy Polo Association in pursuit of the ball at the 2024 Port Harcourt International Polo Tournament',
     label: 'Port Harcourt International Polo Tournament 2024',
     caption: 'Navy riders in pursuit during the Chairborne Cup at the 2024 Port Harcourt International Polo Tournament.',
     defaultFeatured: false
@@ -141,14 +141,14 @@ var NNPT_GALLERY_PHOTOS = [
     id: 'gallery-16',
     src: 'assets/img/gallery-16.jpg',
     alt: 'Four mounted Nigerian Navy polo players lined up before a match',
-    label: 'Nigerian Navy Polo Team',
-    caption: 'The Nigerian Navy Polo Team lined up on horseback ahead of a match.',
+    label: 'Nigerian Navy Polo Association',
+    caption: 'The Nigerian Navy Polo Association lined up on horseback ahead of a match.',
     defaultFeatured: false
   },
   {
     id: 'gallery-17',
     src: 'assets/img/gallery-17.jpg',
-    alt: 'Nigerian Navy Polo Team in action during a match, riders in pursuit of the ball',
+    alt: 'Nigerian Navy Polo Association in action during a match, riders in pursuit of the ball',
     label: 'Match Action',
     caption: 'Navy riders in pursuit of the ball during competitive play.',
     defaultFeatured: false
@@ -156,17 +156,17 @@ var NNPT_GALLERY_PHOTOS = [
   {
     id: 'gallery-18',
     src: 'assets/img/gallery-18.jpg',
-    alt: 'Nigerian Navy Polo Team players holding a trophy at an awards retrospective event',
+    alt: 'Nigerian Navy Polo Association players holding a trophy at an awards retrospective event',
     label: 'Awards Presentation',
-    caption: 'Members of the Nigerian Navy Polo Team with a trophy at an awards retrospective event.',
+    caption: 'Members of the Nigerian Navy Polo Association with a trophy at an awards retrospective event.',
     defaultFeatured: false
   },
   {
     id: 'gallery-19',
     src: 'assets/img/gallery-19.jpg',
-    alt: 'Nigerian Navy Polo Team holding the Chief of Naval Staff Cup trophy on the pitch in Abuja',
+    alt: 'Nigerian Navy Polo Association holding the Chief of Naval Staff Cup trophy on the pitch in Abuja',
     label: 'Chief of Naval Staff Cup',
-    caption: 'The Nigerian Navy Polo Team with the Chief of Naval Staff Cup trophy.',
+    caption: 'The Nigerian Navy Polo Association with the Chief of Naval Staff Cup trophy.',
     defaultFeatured: false
   },
   {
@@ -196,9 +196,9 @@ var NNPT_GALLERY_PHOTOS = [
   {
     id: 'gallery-23',
     src: 'assets/img/gallery-23.jpg',
-    alt: 'Nigerian Navy Polo Team players lined up with mallets before a match',
-    label: 'Nigerian Navy Polo Team',
-    caption: 'Nigerian Navy Polo Team players lined up with their mallets before a match.',
+    alt: 'Nigerian Navy Polo Association players lined up with mallets before a match',
+    label: 'Nigerian Navy Polo Association',
+    caption: 'Nigerian Navy Polo Association players lined up with their mallets before a match.',
     defaultFeatured: false
   },
   {
@@ -228,9 +228,9 @@ var NNPT_GALLERY_PHOTOS = [
   {
     id: 'gallery-27',
     src: 'assets/img/gallery-27.jpg',
-    alt: 'Nigerian Navy Polo Team members seated in the stands at the 2023 NPA Lagos International Polo Tournament',
+    alt: 'Nigerian Navy Polo Association members seated in the stands at the 2023 NPA Lagos International Polo Tournament',
     label: 'CNS Cup Finals 2023',
-    caption: 'Nigerian Navy Polo Team members in the stands at the 2023 NPA Lagos International Polo Tournament.',
+    caption: 'Nigerian Navy Polo Association members in the stands at the 2023 NPA Lagos International Polo Tournament.',
     defaultFeatured: false
   },
   {

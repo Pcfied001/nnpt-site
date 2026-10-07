@@ -1,5 +1,5 @@
 /* ============================================================
-   Nigerian Navy Polo Team — site scripts
+   Nigerian Navy Polo Association — site scripts
    ============================================================ */
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -95,6 +95,12 @@ document.addEventListener('DOMContentLoaded', function () {
       var value = selected ? selected.value : 'serviceman';
       membershipForm.classList.remove('show-serviceman', 'show-civilian');
       membershipForm.classList.add(value === 'civilian' ? 'show-civilian' : 'show-serviceman');
+
+      // naval personnel are filed on the permanent register, so service number + rank are mandatory for them
+      ['aServiceNo', 'aRank'].forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el) el.required = (value !== 'civilian');
+      });
     }
 
     typeRadios.forEach(function (radio) {
@@ -142,6 +148,7 @@ document.addEventListener('DOMContentLoaded', function () {
         serviceNo: (document.getElementById('aServiceNo') || {}).value,
         rank: (document.getElementById('aRank') || {}).value,
         command: (document.getElementById('aCommand') || {}).value,
+        serviceStatus: (document.getElementById('aServiceStatus') || {}).value,
         occupation: (document.getElementById('aOccupation') || {}).value,
         org: (document.getElementById('aOrg') || {}).value,
         sponsor: (document.getElementById('aSponsor') || {}).value,
@@ -362,7 +369,7 @@ document.addEventListener('DOMContentLoaded', function () {
       dob: "Placeholder — DD/MM/YYYY",
       dod: "2025",
       photo: "assets/img/capt-aminu-mai.jpg",
-      bio: "Captain Aminu Mai was a familiar and much-loved face on the polo field, known as much for his sportsmanship as for his skill in the saddle. A dedicated player who represented the Navy with pride at club and inter-club fixtures, he brought warmth, humour, and an unmistakable love of the game to every match he played. His camaraderie on the field and his kindness off it are remembered fondly by teammates and opponents alike. He is deeply missed by the Nigerian Navy Polo Team, and his memory rides on with every chukka played in his honour."
+      bio: "Captain Aminu Mai was a familiar and much-loved face on the polo field, known as much for his sportsmanship as for his skill in the saddle. A dedicated player who represented the Navy with pride at club and inter-club fixtures, he brought warmth, humour, and an unmistakable love of the game to every match he played. His camaraderie on the field and his kindness off it are remembered fondly by teammates and opponents alike. He is deeply missed by the Nigerian Navy Polo Association, and his memory rides on with every chukka played in his honour."
     },
     "2": {
       name: "Name Placeholder II",
@@ -470,17 +477,17 @@ document.addEventListener('DOMContentLoaded', function () {
     "1": {
       name: "Twilight Cup",
       year: "Year Placeholder",
-      story: "Won by the Nigerian Navy Polo Team. Full match details — the host tournament, the opponents, and the standout moments — will be added once confirmed by the Team."
+      story: "Won by the Nigerian Navy Polo Association. Full match details — the host tournament, the opponents, and the standout moments — will be added once confirmed by the Team."
     },
     "2": {
       name: "Juma Cup",
       year: "Year Placeholder",
-      story: "Won by the Nigerian Navy Polo Team. Full match details — the host tournament, the opponents, and the standout moments — will be added once confirmed by the Team."
+      story: "Won by the Nigerian Navy Polo Association. Full match details — the host tournament, the opponents, and the standout moments — will be added once confirmed by the Team."
     },
     "3": {
       name: "TY Danjuma Cup",
       year: "2022",
-      story: "Won in the Nigerian Navy Polo Team's maiden appearance at the Port Harcourt International Polo Tournament — the young team's first major trophy, secured just a year after the team was established. The team returned in 2023 to successfully defend the title."
+      story: "Won in the Nigerian Navy Polo Association's maiden appearance at the Port Harcourt International Polo Tournament — the young team's first major trophy, secured just a year after the team was established. The team returned in 2023 to successfully defend the title."
     },
     "4": {
       name: "O.B. Lulu Briggs Cup",

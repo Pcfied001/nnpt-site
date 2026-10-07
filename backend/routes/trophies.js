@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const secretariatAuth = require('../middleware/secretariatAuth');
 const fs = require('fs');
 const path = require('path');
 
@@ -28,7 +29,7 @@ router.get('/:id', (req, res) => {
 });
 
 // POST /api/trophies — add a new record
-router.post('/', (req, res) => {
+router.post('/', secretariatAuth, (req, res) => {
   const trophies = readTrophies();
   const { name, year, story } = req.body;
 
@@ -44,7 +45,7 @@ router.post('/', (req, res) => {
 });
 
 // PUT /api/trophies/:id — update a record
-router.put('/:id', (req, res) => {
+router.put('/:id', secretariatAuth, (req, res) => {
   const trophies = readTrophies();
   const idx = trophies.findIndex((t) => t.id === Number(req.params.id));
   if (idx === -1) return res.status(404).json({ error: 'Trophy not found' });
@@ -55,7 +56,7 @@ router.put('/:id', (req, res) => {
 });
 
 // DELETE /api/trophies/:id — remove a record
-router.delete('/:id', (req, res) => {
+router.delete('/:id', secretariatAuth, (req, res) => {
   const trophies = readTrophies();
   const idx = trophies.findIndex((t) => t.id === Number(req.params.id));
   if (idx === -1) return res.status(404).json({ error: 'Trophy not found' });

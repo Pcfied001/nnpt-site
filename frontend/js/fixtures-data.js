@@ -1,5 +1,5 @@
 /* ============================================================
-   Nigerian Navy Polo Team — shared fixtures data
+   Nigerian Navy Polo Association — shared fixtures data
    Single source of truth for match fixtures. Edit an entry (or
    add a new one) here and the change appears automatically both
    in the homepage Fixtures section and on the full Fixtures page

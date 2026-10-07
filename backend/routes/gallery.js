@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const secretariatAuth = require('../middleware/secretariatAuth');
 const fs = require('fs');
 const path = require('path');
 
@@ -33,7 +34,7 @@ router.get('/:id', (req, res) => {
 });
 
 // POST /api/gallery — add a new photo to the library
-router.post('/', (req, res) => {
+router.post('/', secretariatAuth, (req, res) => {
   const photos = readPhotos();
   const { id, src, alt, label, caption, featured } = req.body;
 
@@ -51,7 +52,7 @@ router.post('/', (req, res) => {
 });
 
 // PUT /api/gallery/:id — update a photo (label, caption, featured, etc.)
-router.put('/:id', (req, res) => {
+router.put('/:id', secretariatAuth, (req, res) => {
   const photos = readPhotos();
   const idx = photos.findIndex((p) => p.id === req.params.id);
   if (idx === -1) return res.status(404).json({ error: 'Photo not found' });
@@ -62,7 +63,7 @@ router.put('/:id', (req, res) => {
 });
 
 // PUT /api/gallery/:id/featured — toggle whether a photo is on the homepage slideshow
-router.put('/:id/featured', (req, res) => {
+router.put('/:id/featured', secretariatAuth, (req, res) => {
   const photos = readPhotos();
   const idx = photos.findIndex((p) => p.id === req.params.id);
   if (idx === -1) return res.status(404).json({ error: 'Photo not found' });
@@ -73,7 +74,7 @@ router.put('/:id/featured', (req, res) => {
 });
 
 // DELETE /api/gallery/:id — remove a photo from the library
-router.delete('/:id', (req, res) => {
+router.delete('/:id', secretariatAuth, (req, res) => {
   const photos = readPhotos();
   const idx = photos.findIndex((p) => p.id === req.params.id);
   if (idx === -1) return res.status(404).json({ error: 'Photo not found' });

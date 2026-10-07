@@ -3,24 +3,78 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Secretariat Admin — Nigerian Navy Polo Team</title>
+<title>Secretariat Admin — Nigerian Navy Polo Association</title>
 <meta name="robots" content="noindex, nofollow">
-<link rel="icon" type="image/webp" href="assets/img/logo.webp">
+<link rel="icon" type="image/png" sizes="256x256" href="assets/img/favicon-npa.png">
+<link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Work+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 <style>
   body{ background:var(--navy-deep); }
-  .admin-wrap{ max-width:1100px; margin:0 auto; padding:56px 24px 100px; }
-  .admin-header{ margin-bottom:36px; }
+  .admin-wrap{ max-width:1240px; margin:0 auto; padding:48px 24px 100px; }
+  .admin-header{ margin-bottom:28px; display:flex; align-items:center; gap:20px; }
+  .admin-header img{ width:64px; height:64px; object-fit:contain; flex-shrink:0; }
   .admin-header span.mono{ color:var(--gold); }
-  .admin-header h1{ color:var(--parchment); margin:6px 0 8px; }
-  .admin-header p{ color:var(--mist); max-width:640px; line-height:1.6; }
-  .admin-warning{
-    background:rgba(198,161,91,0.1); border:1px solid rgba(198,161,91,0.35);
-    color:var(--gold-bright); padding:16px 20px; font-size:0.88rem; line-height:1.6;
-    margin-bottom:36px;
+  .admin-header h1{ color:var(--parchment); margin:4px 0 0; font-size:2rem; }
+
+  /* stats */
+  .stat-row{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:14px; margin-bottom:28px; }
+  .stat{ background:var(--navy-ink); border:1px solid rgba(198,161,91,0.18); padding:16px 18px; text-align:left; font:inherit; color:inherit; }
+  button.stat{ cursor:pointer; }
+  button.stat:hover{ border-color:var(--gold); }
+  .stat .n{ display:block; font-family:'Cormorant Garamond',serif; font-size:2rem; line-height:1; color:var(--parchment); }
+  .stat .l{ display:block; margin-top:8px; font-family:'JetBrains Mono',monospace; font-size:0.64rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--mist); }
+  .stat.attn{ border-color:var(--gold); }
+  .stat.attn .n{ color:var(--gold-bright); }
+
+  /* tabs */
+  .tabs{ display:flex; gap:4px; border-bottom:1px solid rgba(198,161,91,0.25); margin-bottom:24px; overflow-x:auto; }
+  .tab{
+    background:none; border:0; border-bottom:2px solid transparent; color:var(--mist);
+    padding:12px 18px; cursor:pointer; font-family:'JetBrains Mono',monospace; font-size:0.74rem;
+    letter-spacing:0.06em; text-transform:uppercase; white-space:nowrap;
   }
+  .tab:hover{ color:var(--mist-bright); }
+  .tab[aria-selected="true"]{ color:var(--gold-bright); border-bottom-color:var(--gold); }
+  .tab .count{ margin-left:8px; padding:1px 7px; background:rgba(198,161,91,0.15); color:var(--gold); border-radius:10px; font-size:0.66rem; }
+  .panel[hidden]{ display:none; }
+
+  /* toolbar */
+  .toolbar{ display:flex; flex-wrap:wrap; gap:12px; align-items:center; margin-bottom:14px; }
+  .search{ position:relative; flex:1 1 340px; min-width:240px; }
+  .search svg{ position:absolute; left:14px; top:50%; transform:translateY(-50%); width:18px; height:18px; color:var(--gold); pointer-events:none; }
+  .search input{
+    width:100%; padding:13px 40px 13px 42px; background:var(--navy-ink); color:var(--parchment);
+    border:1px solid rgba(198,161,91,0.35); font:inherit; font-size:0.95rem;
+  }
+  .search input:focus{ outline:none; border-color:var(--gold); box-shadow:0 0 0 3px rgba(198,161,91,0.15); }
+  .search input::placeholder{ color:var(--mist); }
+  .search .clear{ position:absolute; right:8px; top:50%; transform:translateY(-50%); background:none; border:0; color:var(--mist); font-size:1.3rem; cursor:pointer; padding:4px 8px; display:none; }
+  .search .clear.show{ display:block; }
+  .search .hint{ position:absolute; right:14px; top:50%; transform:translateY(-50%); font-family:'JetBrains Mono',monospace; font-size:0.66rem; color:var(--mist); border:1px solid rgba(140,162,179,0.4); padding:1px 6px; pointer-events:none; }
+  .search input:focus ~ .hint, .search input:not(:placeholder-shown) ~ .hint{ display:none; }
+  select.filter, .field-select{
+    padding:12px 12px; background:var(--navy-ink); color:var(--mist-bright); border:1px solid rgba(198,161,91,0.3);
+    font:inherit; font-size:0.85rem;
+  }
+  select.filter:focus{ outline:none; border-color:var(--gold); }
+  .btn{
+    display:inline-block; padding:11px 18px; font-family:'JetBrains Mono',monospace; font-size:0.74rem; letter-spacing:0.04em;
+    text-transform:uppercase; text-decoration:none; cursor:pointer; border:1px solid var(--gold); white-space:nowrap;
+  }
+  .btn-primary{ background:var(--gold); color:var(--navy-deep); }
+  .btn-primary:hover{ background:var(--gold-bright); }
+  .btn-ghost{ background:transparent; color:var(--gold); }
+  .btn-ghost:hover{ background:rgba(198,161,91,0.12); }
+  .btn-danger{ background:transparent; color:#E0A29B; border-color:#9A4A42; }
+  .btn-danger:hover{ background:rgba(154,74,66,0.2); }
+  .btn:disabled{ opacity:0.6; cursor:default; }
+  .result-meta{ display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; color:var(--mist); font-size:0.8rem; margin-bottom:10px; }
+  .result-meta a{ color:var(--gold); text-decoration:none; margin-left:14px; }
+  .result-meta a:hover{ text-decoration:underline; }
+
+  /* tables */
   .admin-table-wrap{ overflow-x:auto; border:1px solid rgba(198,161,91,0.18); }
   table.admin-table{ width:100%; border-collapse:collapse; font-size:0.88rem; }
   table.admin-table th, table.admin-table td{
@@ -28,24 +82,30 @@
     color:var(--mist-bright); white-space:nowrap;
   }
   table.admin-table th{
-    font-family:'JetBrains Mono', monospace; font-size:0.68rem; letter-spacing:0.06em;
+    font-family:'JetBrains Mono',monospace; font-size:0.68rem; letter-spacing:0.06em;
     text-transform:uppercase; color:var(--gold); background:rgba(255,255,255,0.02);
   }
-  table.admin-table tr:hover td{ background:rgba(255,255,255,0.02); }
+  table.admin-table tr:hover td{ background:rgba(255,255,255,0.025); }
+  tr.member-row{ cursor:pointer; }
+  tr.member-row:focus{ outline:1px solid var(--gold); outline-offset:-1px; }
+  td.name-cell{ color:var(--parchment); font-weight:500; }
+  td.mono-cell{ font-family:'JetBrains Mono',monospace; font-size:0.8rem; }
+  mark{ background:rgba(221,189,126,0.35); color:var(--parchment); padding:0 1px; }
   .badge{
-    display:inline-block; padding:3px 10px; font-size:0.68rem; font-family:'JetBrains Mono', monospace;
+    display:inline-block; padding:3px 10px; font-size:0.68rem; font-family:'JetBrains Mono',monospace;
     letter-spacing:0.04em; border:1px solid; text-transform:uppercase;
   }
   .badge-civilian{ color:#8CB3D9; border-color:#8CB3D9; }
   .badge-serviceman{ color:var(--gold); border-color:var(--gold); }
-  .slip-link{
-    display:inline-block; padding:6px 14px; font-size:0.78rem; font-family:'JetBrains Mono', monospace;
-    color:var(--navy-deep); background:var(--gold); text-decoration:none;
-  }
+  .badge-active{ color:var(--civic-bright); border-color:var(--civic); }
+  .badge-pending{ color:var(--gold-bright); border-color:var(--gold); background:rgba(198,161,91,0.1); }
+  .badge-suspended{ color:#E0A29B; border-color:#9A4A42; }
+  .badge-archived{ color:var(--mist); border-color:rgba(140,162,179,0.5); }
+  .slip-link{ display:inline-block; padding:6px 14px; font-size:0.78rem; font-family:'JetBrains Mono',monospace; color:var(--navy-deep); background:var(--gold); text-decoration:none; }
   .slip-link:hover{ background:var(--gold-bright); }
   .slip-missing{ color:var(--mist); font-size:0.78rem; font-style:italic; }
   .card-toggle{
-    display:inline-block; padding:6px 14px; font-size:0.75rem; font-family:'JetBrains Mono', monospace;
+    display:inline-block; padding:6px 14px; font-size:0.75rem; font-family:'JetBrains Mono',monospace;
     letter-spacing:0.02em; background:transparent; color:var(--mist-bright);
     border:1px solid rgba(198,161,91,0.4); cursor:pointer;
   }
@@ -53,151 +113,559 @@
   .card-toggle.is-printed{ background:rgba(198,161,91,0.15); border-color:var(--gold); color:var(--gold-bright); }
   .card-toggle:disabled{ opacity:0.6; cursor:default; }
   .card-timestamp{ margin-top:4px; font-size:0.68rem; color:var(--mist); }
-  .admin-empty{ color:var(--mist); padding:40px; text-align:center; border:1px dashed rgba(198,161,91,0.25); }
-  .admin-section{ margin-top:56px; }
+  .admin-empty{ color:var(--mist); padding:40px; text-align:center; border:1px dashed rgba(198,161,91,0.25); line-height:1.7; }
+  .pager{ display:flex; justify-content:center; align-items:center; gap:14px; margin-top:18px; color:var(--mist); font-size:0.82rem; }
+  .pager .btn{ padding:8px 14px; }
+
+  /* modal */
+  .m-overlay{ position:fixed; inset:0; background:rgba(4,12,22,0.8); z-index:1000; display:none; align-items:flex-start; justify-content:center; padding:32px 16px; overflow-y:auto; }
+  .m-overlay.open{ display:flex; }
+  .m-box{ width:100%; max-width:860px; background:var(--navy-deep); border:1px solid var(--gold); position:relative; }
+  .m-head{ padding:24px 28px 18px; border-bottom:1px solid rgba(198,161,91,0.25); display:flex; justify-content:space-between; gap:16px; align-items:flex-start; }
+  .m-head h2{ color:var(--parchment); font-size:1.7rem; margin:2px 0 6px; }
+  .m-head .mono{ color:var(--gold); }
+  .m-sub{ color:var(--mist); font-size:0.82rem; display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
+  .m-close{ background:none; border:0; color:var(--mist-bright); font-size:1.8rem; line-height:1; cursor:pointer; padding:0 4px; }
+  .m-close:hover{ color:var(--gold); }
+  .m-body{ padding:24px 28px; }
+  .m-grid{ display:grid; grid-template-columns:1fr 1fr; gap:16px 20px; }
+  .m-grid .full{ grid-column:1 / -1; }
+  .m-body label{ display:block; margin-bottom:6px; font-family:'JetBrains Mono',monospace; font-size:0.66rem; letter-spacing:0.07em; text-transform:uppercase; color:var(--gold); }
+  .m-body input, .m-body select, .m-body textarea{
+    width:100%; padding:11px 12px; background:var(--navy-ink); color:var(--parchment);
+    border:1px solid rgba(198,161,91,0.3); font:inherit; font-size:0.92rem;
+  }
+  .m-body textarea{ min-height:80px; resize:vertical; }
+  .m-body input:focus, .m-body select:focus, .m-body textarea:focus{ outline:none; border-color:var(--gold); }
+  .m-section{ margin:28px 0 12px; font-family:'JetBrains Mono',monospace; font-size:0.7rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--gold); padding-bottom:8px; border-bottom:1px solid rgba(198,161,91,0.2); }
+  .timeline{ list-style:none; }
+  .timeline li{ position:relative; padding:0 0 14px 22px; color:var(--mist-bright); font-size:0.88rem; border-left:1px solid rgba(198,161,91,0.3); margin-left:5px; }
+  .timeline li::before{ content:''; position:absolute; left:-5px; top:5px; width:9px; height:9px; background:var(--gold); border-radius:50%; }
+  .timeline li:last-child{ border-left-color:transparent; padding-bottom:0; }
+  .timeline .when{ display:block; color:var(--mist); font-size:0.74rem; margin-top:2px; }
+  .timeline .cur{ color:var(--gold-bright); font-size:0.66rem; font-family:'JetBrains Mono',monospace; margin-left:8px; }
+  .m-foot{ padding:18px 28px; border-top:1px solid rgba(198,161,91,0.25); display:flex; flex-wrap:wrap; gap:10px; justify-content:space-between; align-items:center; }
+  .m-foot .grp{ display:flex; gap:10px; flex-wrap:wrap; }
+  .m-error{ color:#E8A59E; background:rgba(154,74,66,0.15); border:1px solid #9A4A42; padding:10px 14px; font-size:0.85rem; margin-bottom:16px; display:none; }
+  .m-error.show{ display:block; }
+  .toast{ position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--gold); color:var(--navy-deep); padding:12px 22px; font-size:0.88rem; opacity:0; pointer-events:none; transition:all .25s; z-index:1100; }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
   .admin-section h2{ color:var(--parchment); font-size:1.4rem; margin-bottom:16px; }
+  @media (max-width:640px){
+    .m-grid{ grid-template-columns:1fr; }
+    .admin-header h1{ font-size:1.5rem; }
+    .m-head, .m-body, .m-foot{ padding-left:18px; padding-right:18px; }
+  }
 </style>
 </head>
 <body>
 
 <div class="admin-wrap">
   <div class="admin-header">
-    <span class="mono">Secretariat Only</span>
-    <h1>Membership Applications &amp; Premium Slips</h1>
-    <p>Internal record of membership applications submitted through the website, with a downloadable Membership Premium Slip for each. Slips are generated automatically on submission — nothing here is ever sent to an applicant automatically.</p>
-  </div>
-
-  <div id="applicationsWrap">
-    <div class="admin-empty">Loading applications…</div>
-  </div>
-
-  <div class="admin-section">
-    <h2>Contact Enquiries</h2>
-    <div id="enquiriesWrap">
-      <div class="admin-empty">Loading enquiries…</div>
+    <img src="assets/img/logo-npa.png" alt="">
+    <div>
+      <span class="mono">Secretariat Only</span>
+      <h1>Secretariat Dashboard</h1>
     </div>
   </div>
+
+  <div class="stat-row" id="statRow" aria-live="polite"></div>
+
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" id="tab-register" aria-selected="true" aria-controls="panel-register" data-tab="register">Personnel Register <span class="count" id="cnt-register">–</span></button>
+    <button class="tab" role="tab" id="tab-applications" aria-selected="false" aria-controls="panel-applications" data-tab="applications">Applications <span class="count" id="cnt-applications">–</span></button>
+    <button class="tab" role="tab" id="tab-enquiries" aria-selected="false" aria-controls="panel-enquiries" data-tab="enquiries">Enquiries <span class="count" id="cnt-enquiries">–</span></button>
+  </div>
+
+  <!-- PERSONNEL REGISTER -->
+  <section class="panel" id="panel-register" role="tabpanel" aria-labelledby="tab-register">
+    <div class="toolbar">
+      <div class="search">
+        <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="1.6"/><path d="m16 16 4.5 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <input id="q" type="search" placeholder="Search by name, service number, rank, command, phone…" autocomplete="off" aria-label="Search naval personnel">
+        <button type="button" class="clear" id="qClear" aria-label="Clear search">&times;</button>
+        <span class="hint">/</span>
+      </div>
+      <select class="filter" id="fCategory" aria-label="Filter by category">
+        <option value="">All categories</option><option value="Officer">Officers</option><option value="Rating">Ratings</option><option value="Other">Other</option>
+      </select>
+      <select class="filter" id="fRank" aria-label="Filter by rank"><option value="">All ranks</option></select>
+      <select class="filter" id="fService" aria-label="Filter by service status">
+        <option value="">Serving &amp; retired</option><option value="serving">Serving</option><option value="retired">Retired</option>
+      </select>
+      <select class="filter" id="fStatus" aria-label="Filter by membership status">
+        <option value="">All statuses</option><option value="active">Active</option><option value="pending">Pending approval</option><option value="suspended">Suspended</option><option value="archived">Archived</option>
+      </select>
+      <select class="filter" id="fSort" aria-label="Sort">
+        <option value="name">Sort: Name A–Z</option><option value="rank">Sort: Rank (senior first)</option><option value="newest">Sort: Newest registered</option>
+      </select>
+      <button type="button" class="btn btn-primary" id="addBtn">+ Add Personnel</button>
+    </div>
+    <div class="result-meta">
+      <span id="resultCount"></span>
+      <span><a href="/api/members/export.csv">Export CSV</a><a href="/api/members/backup.json">Download backup</a></span>
+    </div>
+    <div id="registerWrap"><div class="admin-empty">Loading personnel register…</div></div>
+    <div class="pager" id="pager"></div>
+  </section>
+
+  <!-- APPLICATIONS -->
+  <section class="panel" id="panel-applications" role="tabpanel" aria-labelledby="tab-applications" hidden>
+    <p style="color:var(--mist); max-width:700px; line-height:1.6; margin-bottom:18px;">Membership applications submitted through the website, with the internal Premium Slip for each. Naval personnel applications are automatically filed on the Personnel Register — nothing here is sent to an applicant automatically.</p>
+    <div id="applicationsWrap"><div class="admin-empty">Loading applications…</div></div>
+  </section>
+
+  <!-- ENQUIRIES -->
+  <section class="panel" id="panel-enquiries" role="tabpanel" aria-labelledby="tab-enquiries" hidden>
+    <div id="enquiriesWrap"><div class="admin-empty">Loading enquiries…</div></div>
+  </section>
 </div>
 
+<!-- MEMBER MODAL -->
+<div class="m-overlay" id="mOverlay">
+  <div class="m-box" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+    <div class="m-head">
+      <div>
+        <span class="mono" id="mKicker">Personnel Record</span>
+        <h2 id="mTitle">Add Personnel</h2>
+        <div class="m-sub" id="mSub"></div>
+      </div>
+      <button type="button" class="m-close" id="mClose" aria-label="Close">&times;</button>
+    </div>
+    <form id="mForm" novalidate>
+      <div class="m-body">
+        <div class="m-error" id="mError" role="alert"></div>
+        <div class="m-grid">
+          <div class="full"><label for="fFullName">Full name *</label><input id="fFullName" type="text" autocomplete="off"></div>
+          <div><label for="fServiceNo">Service number *</label><input id="fServiceNo" type="text" autocomplete="off"></div>
+          <div><label for="fRankInput">Rank *</label><input id="fRankInput" type="text" list="rankList" autocomplete="off"></div>
+          <div><label for="fRankDate">Rank effective date</label><input id="fRankDate" type="date"></div>
+          <div><label for="fServiceStatus">Service status</label>
+            <select id="fServiceStatus"><option value="serving">Serving</option><option value="retired">Retired</option></select></div>
+          <div><label for="fCommand">Command / base</label><input id="fCommand" type="text" autocomplete="off"></div>
+          <div><label for="fTier">Membership category</label>
+            <select id="fTier"><option value="">—</option><option>Associate</option><option>Full Member</option><option>Honorary (by nomination)</option></select></div>
+          <div><label for="fPhone">Phone</label><input id="fPhone" type="tel" autocomplete="off"></div>
+          <div><label for="fEmail">Email</label><input id="fEmail" type="email" autocomplete="off"></div>
+          <div class="full"><label for="fAddress">Address</label><input id="fAddress" type="text" autocomplete="off"></div>
+          <div><label for="fMStatus">Membership status</label>
+            <select id="fMStatus"><option value="active">Active</option><option value="pending">Pending approval</option><option value="suspended">Suspended</option><option value="archived">Archived</option></select></div>
+          <div class="full"><label for="fNotes">Secretariat notes</label><textarea id="fNotes"></textarea></div>
+        </div>
+        <datalist id="rankList"></datalist>
+
+        <div id="historyBlock" hidden>
+          <div class="m-section">Rank history</div>
+          <ul class="timeline" id="rankHistory"></ul>
+          <div class="m-section">Activity log</div>
+          <ul class="timeline" id="activityLog"></ul>
+        </div>
+      </div>
+      <div class="m-foot">
+        <div class="grp" id="quickActions"></div>
+        <div class="grp">
+          <button type="button" class="btn btn-ghost" id="mCancel">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="mSave">Save record</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
 <script>
-function escapeHtml(str) {
-  if (str === undefined || str === null) return '';
-  return String(str).replace(/[&<>"']/g, function (c) {
-    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
-  });
-}
+(function () {
+  'use strict';
 
-function formatDate(iso) {
-  try {
-    return new Date(iso).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' });
-  } catch (e) {
-    return iso;
-  }
-}
-
-function renderApplications(applications) {
-  var wrap = document.getElementById('applicationsWrap');
-  if (!applications.length) {
-    wrap.innerHTML = '<div class="admin-empty">No membership applications submitted yet.</div>';
-    return;
-  }
-
-  var rows = applications.slice().reverse().map(function (a) {
-    var badgeClass = a.applicantType === 'civilian' ? 'badge-civilian' : 'badge-serviceman';
-    var badgeLabel = a.applicantType === 'civilian' ? 'Civilian' : 'Naval Personnel';
-    var slipCell = a.slipGenerated
-      ? '<a class="slip-link" target="_blank" rel="noopener" href="/api/applications/' + a.id + '/slip">View Slip</a>'
-      : '<span class="slip-missing">Not generated</span>';
-
-    var printed = !!a.cardPrinted;
-    var cardCell = '<button type="button" class="card-toggle ' + (printed ? 'is-printed' : '') + '" data-id="' + a.id + '" data-printed="' + printed + '">' +
-      (printed ? '&#10003; Printed' : 'Mark Printed') + '</button>' +
-      (printed && a.cardPrintedAt ? '<div class="card-timestamp">' + formatDate(a.cardPrintedAt) + '</div>' : '');
-
-    return '<tr>' +
-      '<td>' + formatDate(a.submittedAt) + '</td>' +
-      '<td><span class="badge ' + badgeClass + '">' + badgeLabel + '</span></td>' +
-      '<td>' + escapeHtml(a.fullName) + '</td>' +
-      '<td>' + escapeHtml(a.email) + '</td>' +
-      '<td>' + escapeHtml(a.phone) + '</td>' +
-      '<td>' + escapeHtml(a.tier) + '</td>' +
-      '<td>' + escapeHtml(a.slipRef || '—') + '</td>' +
-      '<td>' + slipCell + '</td>' +
-      '<td>' + cardCell + '</td>' +
-      '</tr>';
-  }).join('');
-
-  wrap.innerHTML = '<div class="admin-table-wrap"><table class="admin-table">' +
-    '<thead><tr><th>Submitted</th><th>Type</th><th>Name</th><th>Email</th><th>Phone</th><th>Tier</th><th>Ref</th><th>Slip</th><th>Membership Card</th></tr></thead>' +
-    '<tbody>' + rows + '</tbody></table></div>';
-
-  wrap.querySelectorAll('.card-toggle').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      var id = btn.getAttribute('data-id');
-      var currentlyPrinted = btn.getAttribute('data-printed') === 'true';
-      var nextValue = !currentlyPrinted;
-      btn.disabled = true;
-      btn.textContent = 'Saving…';
-
-      fetch('/api/applications/' + id, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ cardPrinted: nextValue })
-      })
-        .then(function (res) {
-          if (!res.ok) throw new Error('Update failed');
-          return res.json();
-        })
-        .then(function () {
-          return fetch('/api/applications').then(function (r) { return r.json(); });
-        })
-        .then(renderApplications)
-        .catch(function () {
-          btn.disabled = false;
-          btn.textContent = currentlyPrinted ? '\u2713 Printed' : 'Mark Printed';
-          alert('Could not update card status. Please try again.');
-        });
+  /* ---------- helpers ---------- */
+  function $(id) { return document.getElementById(id); }
+  function esc(str) {
+    if (str === undefined || str === null) return '';
+    return String(str).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
     });
-  });
-}
+  }
+  function fmtDate(iso, withTime) {
+    if (!iso) return '—';
+    try {
+      return new Date(iso).toLocaleString('en-GB', withTime === false ? { dateStyle: 'medium' } : { dateStyle: 'medium', timeStyle: 'short' });
+    } catch (e) { return iso; }
+  }
+  function compact(s) { return String(s || '').toLowerCase().replace(/[^a-z0-9]/g, ''); }
+  function titleCase(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : ''; }
 
-function renderEnquiries(enquiries) {
-  var wrap = document.getElementById('enquiriesWrap');
-  if (!enquiries.length) {
-    wrap.innerHTML = '<div class="admin-empty">No contact enquiries submitted yet.</div>';
-    return;
+  function api(url, opts) {
+    return fetch(url, opts).then(function (res) {
+      return res.json().catch(function () { return {}; }).then(function (body) {
+        if (!res.ok) { var err = new Error(body.error || ('Request failed (' + res.status + ')')); err.status = res.status; throw err; }
+        return body;
+      });
+    });
+  }
+  function toast(msg) {
+    var t = $('toast'); t.textContent = msg; t.classList.add('show');
+    clearTimeout(toast._t); toast._t = setTimeout(function () { t.classList.remove('show'); }, 2600);
+  }
+  // wraps matches of the search words in <mark>, escaping everything else
+  function highlight(text, tokens) {
+    text = text === undefined || text === null ? '' : String(text);
+    if (!tokens.length || !text) return esc(text);
+    var lower = text.toLowerCase(), flags = new Array(text.length).fill(false);
+    tokens.forEach(function (tk) {
+      if (!tk) return;
+      var i = lower.indexOf(tk);
+      while (i !== -1) { for (var k = i; k < i + tk.length; k++) flags[k] = true; i = lower.indexOf(tk, i + tk.length); }
+    });
+    var out = '', open = false;
+    for (var j = 0; j < text.length; j++) {
+      if (flags[j] && !open) { out += '<mark>'; open = true; }
+      if (!flags[j] && open) { out += '</mark>'; open = false; }
+      out += esc(text[j]);
+    }
+    return out + (open ? '</mark>' : '');
   }
 
-  var rows = enquiries.slice().reverse().map(function (e) {
-    return '<tr>' +
-      '<td>' + formatDate(e.submittedAt) + '</td>' +
-      '<td>' + escapeHtml(e.name) + '</td>' +
-      '<td>' + escapeHtml(e.email) + '</td>' +
-      '<td>' + escapeHtml(e.subject) + '</td>' +
-      '<td style="white-space:normal; max-width:320px;">' + escapeHtml(e.message) + '</td>' +
-      '</tr>';
-  }).join('');
+  /* ---------- state ---------- */
+  var members = [];
+  var rankOrder = [];     // senior -> junior
+  var page = 1, PAGE_SIZE = 20;
+  var editingId = null;
 
-  wrap.innerHTML = '<div class="admin-table-wrap"><table class="admin-table">' +
-    '<thead><tr><th>Submitted</th><th>Name</th><th>Email</th><th>Subject</th><th>Message</th></tr></thead>' +
-    '<tbody>' + rows + '</tbody></table></div>';
-}
-
-fetch('/api/applications')
-  .then(function (res) { return res.json(); })
-  .then(renderApplications)
-  .catch(function () {
-    document.getElementById('applicationsWrap').innerHTML =
-      '<div class="admin-empty">Couldn\'t load applications. Is the backend server running?</div>';
+  /* ---------- tabs ---------- */
+  function showTab(name) {
+    ['register', 'applications', 'enquiries'].forEach(function (t) {
+      $('panel-' + t).hidden = (t !== name);
+      $('tab-' + t).setAttribute('aria-selected', t === name ? 'true' : 'false');
+    });
+    try { history.replaceState(null, '', '#' + name); } catch (e) {}
+  }
+  document.querySelectorAll('.tab').forEach(function (b) {
+    b.addEventListener('click', function () { showTab(b.getAttribute('data-tab')); });
   });
 
-fetch('/api/enquiries')
-  .then(function (res) { return res.json(); })
-  .then(renderEnquiries)
-  .catch(function () {
-    document.getElementById('enquiriesWrap').innerHTML =
-      '<div class="admin-empty">Couldn\'t load enquiries. Is the backend server running?</div>';
+  /* ---------- personnel register ---------- */
+  function rankIdx(rank) {
+    var n = compact(rank);
+    for (var i = 0; i < rankOrder.length; i++) if (compact(rankOrder[i]) === n) return i;
+    return rankOrder.length;
+  }
+
+  function tokensFromQuery() {
+    return $('q').value.toLowerCase().split(/\s+/).filter(Boolean);
+  }
+
+  function matches(m, tokens) {
+    if (!tokens.length) return true;
+    var hay = [m.fullName, m.rank, m.serviceNo, m.command, m.phone, m.email, m.memberNo].join(' ').toLowerCase();
+    var cHay = compact([m.serviceNo, m.memberNo, m.phone].join(' '));
+    return tokens.every(function (tk) {
+      if (hay.indexOf(tk) !== -1) return true;
+      var c = compact(tk);
+      return c.length > 0 && cHay.indexOf(c) !== -1;   // NN/1234 finds NN1234 and vice versa
+    });
+  }
+
+  function filtered() {
+    var tokens = tokensFromQuery();
+    var cat = $('fCategory').value, rank = $('fRank').value, svc = $('fService').value, st = $('fStatus').value;
+    var list = members.filter(function (m) {
+      return matches(m, tokens) &&
+        (!cat || m.rankCategory === cat) &&
+        (!rank || compact(m.rank) === compact(rank)) &&
+        (!svc || m.serviceStatus === svc) &&
+        (!st || m.status === st);
+    });
+    var sort = $('fSort').value;
+    list.sort(function (a, b) {
+      if (sort === 'rank') return (rankIdx(a.rank) - rankIdx(b.rank)) || a.fullName.localeCompare(b.fullName);
+      if (sort === 'newest') return new Date(b.createdAt) - new Date(a.createdAt);
+      return a.fullName.localeCompare(b.fullName);
+    });
+    return list;
+  }
+
+  function renderStats() {
+    var total = members.length;
+    var count = function (fn) { return members.filter(fn).length; };
+    var pending = count(function (m) { return m.status === 'pending'; });
+    var cards = [
+      ['Total on register', total, '', ''],
+      ['Serving', count(function (m) { return m.serviceStatus === 'serving'; }), '', 'svc:serving'],
+      ['Retired', count(function (m) { return m.serviceStatus === 'retired'; }), '', 'svc:retired'],
+      ['Officers', count(function (m) { return m.rankCategory === 'Officer'; }), '', 'cat:Officer'],
+      ['Ratings', count(function (m) { return m.rankCategory === 'Rating'; }), '', 'cat:Rating'],
+      ['Pending approval', pending, pending ? 'attn' : '', 'st:pending']
+    ];
+    $('statRow').innerHTML = cards.map(function (c) {
+      return '<button type="button" class="stat ' + c[2] + '" data-filter="' + c[3] + '"><span class="n">' + c[1] + '</span><span class="l">' + c[0] + '</span></button>';
+    }).join('');
+    $('cnt-register').textContent = total;
+  }
+
+  $('statRow').addEventListener('click', function (e) {
+    var b = e.target.closest('.stat'); if (!b) return;
+    var f = b.getAttribute('data-filter') || '';
+    $('fCategory').value = ''; $('fRank').value = ''; $('fService').value = ''; $('fStatus').value = ''; $('q').value = '';
+    if (f.indexOf('svc:') === 0) $('fService').value = f.slice(4);
+    if (f.indexOf('cat:') === 0) $('fCategory').value = f.slice(4);
+    if (f.indexOf('st:') === 0) $('fStatus').value = f.slice(3);
+    showTab('register'); page = 1; renderRegister();
   });
+
+  function renderRegister() {
+    var list = filtered(), tokens = tokensFromQuery();
+    var total = list.length, pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+    if (page > pages) page = pages;
+    var slice = list.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+    var searching = tokens.length || $('fCategory').value || $('fRank').value || $('fService').value || $('fStatus').value;
+
+    $('resultCount').textContent = total === members.length
+      ? total + (total === 1 ? ' person on the register' : ' personnel on the register')
+      : total + ' of ' + members.length + ' match';
+    $('qClear').classList.toggle('show', $('q').value.length > 0);
+
+    if (!members.length) {
+      $('registerWrap').innerHTML = '<div class="admin-empty">The register is empty.<br>Naval personnel who apply through the website are added here automatically, or use <strong>+ Add Personnel</strong> to enter someone directly.</div>';
+      $('pager').innerHTML = ''; return;
+    }
+    if (!total) {
+      $('registerWrap').innerHTML = '<div class="admin-empty">No personnel match ' + (searching ? 'your search or filters' : 'this view') + '.<br>Check the spelling, or try just part of a name or the service number.</div>';
+      $('pager').innerHTML = ''; return;
+    }
+
+    var rows = slice.map(function (m) {
+      return '<tr class="member-row" tabindex="0" data-id="' + m.id + '">' +
+        '<td class="mono-cell">' + highlight(m.memberNo, tokens) + '</td>' +
+        '<td class="name-cell">' + highlight(m.fullName, tokens) + '</td>' +
+        '<td>' + highlight(m.rank, tokens) + '</td>' +
+        '<td class="mono-cell">' + highlight(m.serviceNo, tokens) + '</td>' +
+        '<td>' + highlight(m.command || '—', tokens) + '</td>' +
+        '<td>' + esc(titleCase(m.serviceStatus)) + '</td>' +
+        '<td><span class="badge badge-' + esc(m.status) + '">' + esc(m.status) + '</span></td>' +
+        '<td>' + fmtDate(m.createdAt, false) + '</td></tr>';
+    }).join('');
+
+    $('registerWrap').innerHTML = '<div class="admin-table-wrap"><table class="admin-table"><thead><tr>' +
+      '<th>Member No.</th><th>Name</th><th>Rank</th><th>Service No.</th><th>Command / Base</th><th>Service</th><th>Status</th><th>Registered</th>' +
+      '</tr></thead><tbody>' + rows + '</tbody></table></div>';
+
+    $('pager').innerHTML = pages > 1
+      ? '<button class="btn btn-ghost" id="pgPrev"' + (page === 1 ? ' disabled' : '') + '>&larr; Prev</button><span>Page ' + page + ' of ' + pages + '</span><button class="btn btn-ghost" id="pgNext"' + (page === pages ? ' disabled' : '') + '>Next &rarr;</button>'
+      : '';
+  }
+
+  $('pager').addEventListener('click', function (e) {
+    if (e.target.id === 'pgPrev') { page--; renderRegister(); window.scrollTo({ top: 200, behavior: 'smooth' }); }
+    if (e.target.id === 'pgNext') { page++; renderRegister(); window.scrollTo({ top: 200, behavior: 'smooth' }); }
+  });
+
+  function openFromRow(row) {
+    if (!row) return;
+    var m = members.find(function (x) { return x.id === Number(row.getAttribute('data-id')); });
+    if (m) openModal(m);
+  }
+  $('registerWrap').addEventListener('click', function (e) { openFromRow(e.target.closest('.member-row')); });
+  $('registerWrap').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' || e.key === ' ') { var r = e.target.closest('.member-row'); if (r) { e.preventDefault(); openFromRow(r); } }
+  });
+
+  var searchTimer;
+  $('q').addEventListener('input', function () { clearTimeout(searchTimer); searchTimer = setTimeout(function () { page = 1; renderRegister(); }, 120); });
+  $('qClear').addEventListener('click', function () { $('q').value = ''; page = 1; renderRegister(); $('q').focus(); });
+  ['fCategory', 'fRank', 'fService', 'fStatus', 'fSort'].forEach(function (id) {
+    $(id).addEventListener('change', function () { page = 1; renderRegister(); });
+  });
+  document.addEventListener('keydown', function (e) {
+    var tag = (document.activeElement || {}).tagName;
+    if (e.key === '/' && tag !== 'INPUT' && tag !== 'TEXTAREA' && tag !== 'SELECT' && !$('mOverlay').classList.contains('open')) {
+      e.preventDefault(); showTab('register'); $('q').focus();
+    }
+  });
+
+  /* ---------- modal ---------- */
+  var FIELDS = { fullName: 'fFullName', serviceNo: 'fServiceNo', rank: 'fRankInput', serviceStatus: 'fServiceStatus', command: 'fCommand', membershipTier: 'fTier', phone: 'fPhone', email: 'fEmail', address: 'fAddress', notes: 'fNotes' };
+  var lastFocus = null, originalRank = '';
+
+  function showError(msg) { var el = $('mError'); el.textContent = msg || ''; el.classList.toggle('show', !!msg); }
+
+  function openModal(m) {
+    lastFocus = document.activeElement;
+    editingId = m ? m.id : null;
+    showError('');
+    Object.keys(FIELDS).forEach(function (k) { $(FIELDS[k]).value = m && m[k] !== undefined ? m[k] : (k === 'serviceStatus' ? 'serving' : ''); });
+    $('fMStatus').value = m ? m.status : 'active';
+    $('fRankDate').value = '';
+    originalRank = m ? m.rank : '';
+
+    $('mKicker').textContent = m ? 'Personnel Record' : 'New Record';
+    $('mTitle').textContent = m ? m.fullName : 'Add Personnel';
+    $('mSave').textContent = m ? 'Save changes' : 'Add to register';
+    $('historyBlock').hidden = !m;
+    $('mSub').innerHTML = m
+      ? '<span class="mono">' + esc(m.memberNo) + '</span><span class="badge badge-' + esc(m.status) + '">' + esc(m.status) + '</span><span>Registered ' + fmtDate(m.createdAt, false) + (m.source === 'online-application' ? ' · via online application' : ' · entered by secretariat') + '</span>'
+      : '<span>Enter the personnel&rsquo;s details below. Service number and rank are required.</span>';
+
+    if (m) {
+      var hist = (m.rankHistory || []).slice().reverse();
+      $('rankHistory').innerHTML = hist.map(function (h, i) {
+        return '<li><strong style="color:var(--parchment)">' + esc(h.rank) + '</strong>' + (i === 0 ? '<span class="cur">CURRENT</span>' : '') +
+          '<span class="when">Effective ' + fmtDate(h.effectiveDate, false) + ' · recorded by ' + esc(h.recordedBy || '—') + '</span></li>';
+      }).join('') || '<li>No rank history recorded.</li>';
+      $('activityLog').innerHTML = (m.activity || []).slice().reverse().slice(0, 15).map(function (a) {
+        return '<li>' + esc(a.text) + '<span class="when">' + fmtDate(a.at) + ' · ' + esc(a.by || '—') + '</span></li>';
+      }).join('') || '<li>No activity recorded.</li>';
+    }
+
+    var qa = '';
+    if (m && m.status === 'pending') {
+      qa = '<button type="button" class="btn btn-primary" data-quick="active">Approve membership</button>' +
+           '<button type="button" class="btn btn-danger" data-quick="archived">Decline</button>';
+    } else if (m && m.status === 'active') {
+      qa = '<button type="button" class="btn btn-danger" data-quick="suspended">Suspend</button>';
+    } else if (m && (m.status === 'suspended' || m.status === 'archived')) {
+      qa = '<button type="button" class="btn btn-ghost" data-quick="active">Reinstate</button>';
+    }
+    $('quickActions').innerHTML = qa;
+
+    $('mOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    setTimeout(function () { $('fFullName').focus(); }, 30);
+  }
+
+  function closeModal() {
+    $('mOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+  $('mClose').addEventListener('click', closeModal);
+  $('mCancel').addEventListener('click', closeModal);
+  $('mOverlay').addEventListener('mousedown', function (e) { if (e.target === $('mOverlay')) closeModal(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && $('mOverlay').classList.contains('open')) closeModal(); });
+  $('addBtn').addEventListener('click', function () { openModal(null); });
+
+  function upsertLocal(rec) {
+    var i = members.findIndex(function (x) { return x.id === rec.id; });
+    if (i === -1) members.push(rec); else members[i] = rec;
+    renderStats(); renderRankFilter(); renderRegister();
+  }
+
+  function saveMember(extra) {
+    var payload = {};
+    Object.keys(FIELDS).forEach(function (k) { payload[k] = $(FIELDS[k]).value.trim(); });
+    payload.status = $('fMStatus').value;
+    if ($('fRankDate').value) payload.rankDate = $('fRankDate').value;
+    if (extra) Object.keys(extra).forEach(function (k) { payload[k] = extra[k]; });
+
+    if (!payload.fullName || !payload.serviceNo || !payload.rank) { showError('Full name, service number and rank are required.'); return; }
+    $('mSave').disabled = true;
+    var req = editingId
+      ? api('/api/members/' + editingId, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+      : api('/api/members', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+    req.then(function (rec) {
+      upsertLocal(rec); closeModal(); toast(editingId ? 'Record updated' : 'Added to the register');
+      loadApplications();
+    }).catch(function (err) { showError(err.message); })
+      .then(function () { $('mSave').disabled = false; });
+  }
+
+  $('mForm').addEventListener('submit', function (e) { e.preventDefault(); saveMember(); });
+  $('quickActions').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-quick]'); if (!b) return;
+    var s = b.getAttribute('data-quick');
+    if (s !== 'active' && !confirm('Are you sure you want to ' + (s === 'archived' ? 'decline / archive this record' : 'suspend this member') + '? The record is kept on the register.')) return;
+    $('fMStatus').value = s; saveMember({ status: s });
+  });
+
+  /* ---------- rank filter + suggestions ---------- */
+  function renderRankFilter() {
+    var current = $('fRank').value;
+    var inUse = {};
+    members.forEach(function (m) { if (m.rank) inUse[m.rank] = true; });
+    var ordered = Object.keys(inUse).sort(function (a, b) { return (rankIdx(a) - rankIdx(b)) || a.localeCompare(b); });
+    $('fRank').innerHTML = '<option value="">All ranks</option>' + ordered.map(function (r) { return '<option>' + esc(r) + '</option>'; }).join('');
+    $('fRank').value = current;
+  }
+
+  /* ---------- applications ---------- */
+  function renderApplications(applications) {
+    $('cnt-applications').textContent = applications.length;
+    var wrap = $('applicationsWrap');
+    if (!applications.length) { wrap.innerHTML = '<div class="admin-empty">No membership applications submitted yet.</div>'; return; }
+
+    var rows = applications.slice().reverse().map(function (a) {
+      var civ = a.applicantType === 'civilian';
+      var slipCell = a.slipGenerated
+        ? '<a class="slip-link" target="_blank" rel="noopener" href="/api/applications/' + a.id + '/slip">View Slip</a>'
+        : '<span class="slip-missing">Not generated</span>';
+      var printed = !!a.cardPrinted;
+      var cardCell = '<button type="button" class="card-toggle ' + (printed ? 'is-printed' : '') + '" data-id="' + a.id + '" data-printed="' + printed + '">' +
+        (printed ? '&#10003; Printed' : 'Mark Printed') + '</button>' +
+        (printed && a.cardPrintedAt ? '<div class="card-timestamp">' + fmtDate(a.cardPrintedAt) + '</div>' : '');
+      return '<tr>' +
+        '<td>' + fmtDate(a.submittedAt) + '</td>' +
+        '<td><span class="badge ' + (civ ? 'badge-civilian' : 'badge-serviceman') + '">' + (civ ? 'Civilian' : 'Naval Personnel') + '</span></td>' +
+        '<td>' + esc(a.fullName) + '</td>' +
+        '<td>' + esc(a.rank || '—') + '</td>' +
+        '<td>' + esc(a.email) + '</td>' +
+        '<td>' + esc(a.phone) + '</td>' +
+        '<td>' + esc(a.tier) + '</td>' +
+        '<td>' + esc(a.memberNo || '—') + '</td>' +
+        '<td>' + esc(a.slipRef || '—') + '</td>' +
+        '<td>' + slipCell + '</td>' +
+        '<td>' + cardCell + '</td></tr>';
+    }).join('');
+
+    wrap.innerHTML = '<div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Submitted</th><th>Type</th><th>Name</th><th>Rank</th><th>Email</th><th>Phone</th><th>Tier</th><th>Member No.</th><th>Ref</th><th>Slip</th><th>Membership Card</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
+
+    wrap.querySelectorAll('.card-toggle').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var id = btn.getAttribute('data-id'), was = btn.getAttribute('data-printed') === 'true';
+        btn.disabled = true; btn.textContent = 'Saving…';
+        api('/api/applications/' + id, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ cardPrinted: !was }) })
+          .then(loadApplications)
+          .catch(function () { btn.disabled = false; btn.textContent = was ? '\u2713 Printed' : 'Mark Printed'; alert('Could not update card status. Please try again.'); });
+      });
+    });
+  }
+
+  function loadApplications() {
+    return api('/api/applications').then(renderApplications).catch(function () {
+      $('applicationsWrap').innerHTML = '<div class="admin-empty">Couldn\'t load applications. Is the backend server running?</div>';
+    });
+  }
+
+  /* ---------- enquiries ---------- */
+  function renderEnquiries(enquiries) {
+    $('cnt-enquiries').textContent = enquiries.length;
+    var wrap = $('enquiriesWrap');
+    if (!enquiries.length) { wrap.innerHTML = '<div class="admin-empty">No contact enquiries submitted yet.</div>'; return; }
+    var rows = enquiries.slice().reverse().map(function (e) {
+      return '<tr><td>' + fmtDate(e.submittedAt) + '</td><td>' + esc(e.name) + '</td><td>' + esc(e.email) + '</td><td>' + esc(e.subject) +
+        '</td><td style="white-space:normal; max-width:360px;">' + esc(e.message) + '</td></tr>';
+    }).join('');
+    wrap.innerHTML = '<div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Submitted</th><th>Name</th><th>Email</th><th>Subject</th><th>Message</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
+  }
+
+  /* ---------- boot ---------- */
+  api('/api/members/meta').then(function (meta) {
+    rankOrder = meta.officers.concat(meta.ratings);
+    $('rankList').innerHTML = rankOrder.map(function (r) { return '<option value="' + esc(r) + '">'; }).join('');
+  }).catch(function () {}).then(function () {
+    return api('/api/members');
+  }).then(function (list) {
+    members = list; renderStats(); renderRankFilter(); renderRegister();
+  }).catch(function () {
+    $('registerWrap').innerHTML = '<div class="admin-empty">Couldn\'t load the personnel register. Is the backend server running?</div>';
+  });
+
+  loadApplications();
+  api('/api/enquiries').then(renderEnquiries).catch(function () {
+    $('enquiriesWrap').innerHTML = '<div class="admin-empty">Couldn\'t load enquiries. Is the backend server running?</div>';
+  });
+
+  var startTab = (location.hash || '').replace('#', '');
+  if (['register', 'applications', 'enquiries'].indexOf(startTab) !== -1) showTab(startTab);
+})();
 </script>
 
 </body>

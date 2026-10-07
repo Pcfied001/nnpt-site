@@ -2,15 +2,15 @@
   {
     "id": "gallery-2",
     "src": "assets/img/gallery-2.jpeg",
-    "alt": "Officers and members of the Nigerian Navy Polo Team",
-    "label": "Nigerian Navy Polo Team",
+    "alt": "Officers and members of the Nigerian Navy Polo Association",
+    "label": "Nigerian Navy Polo Association",
     "caption": "Officers and members of the Team at the Naval Headquarters.",
     "featured": true
   },
   {
     "id": "gallery-1",
     "src": "assets/img/gallery-1.jpeg",
-    "alt": "The Nigerian Navy Polo Team presenting the T.Y. Danjuma Cup to the Chief of Naval Staff",
+    "alt": "The Nigerian Navy Polo Association presenting the T.Y. Danjuma Cup to the Chief of Naval Staff",
     "label": "T.Y. Danjuma Cup",
     "caption": "The polo team presents the T.Y. Danjuma Cup to the Chief of Naval Staff.",
     "featured": true

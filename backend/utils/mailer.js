@@ -1,8 +1,8 @@
 const path = require('path');
 const BREVO_ENDPOINT = 'https://api.brevo.com/v3/smtp/email';
 const CREST_URL = process.env.PUBLIC_SITE_URL
-  ? `${process.env.PUBLIC_SITE_URL.replace(/\/$/, '')}/assets/nn-crest.png`
-  : '/assets/nn-crest.png';
+  ? `${process.env.PUBLIC_SITE_URL.replace(/\/$/, '')}/assets/logo-npa.png`
+  : '/assets/logo-npa.png';
 
 let warned = false;
 
@@ -19,7 +19,7 @@ function warnIfNotConfigured() {
   warned = true;
 }
 
-const FROM_NAME = 'Nigerian Navy Polo Team';
+const FROM_NAME = 'Nigerian Navy Polo Association';
 
 async function sendMail({ to, subject, html, text }) {
   if (!isConfigured()) {
@@ -56,28 +56,28 @@ async function sendMail({ to, subject, html, text }) {
 }
 
 function sendEnquiryConfirmation(enquiry) {
-  const subject = 'We\'ve received your enquiry — Nigerian Navy Polo Team';
+  const subject = 'We\'ve received your enquiry — Nigerian Navy Polo Association';
   const text =
     `Hi ${enquiry.name || 'there'},\n\n` +
-    `Thanks for reaching out to the Nigerian Navy Polo Team. We've received your enquiry and a member ` +
+    `Thanks for reaching out to the Nigerian Navy Polo Association. We've received your enquiry and a member ` +
     `of the secretariat will get back to you within 3–5 working days.\n\n` +
     `Your message:\n"${enquiry.message}"\n\n` +
-    `— Nigerian Navy Polo Team Secretariat`;
+    `— Nigerian Navy Polo Association Secretariat`;
 
   const html = `
     <div style="font-family:Arial,Helvetica,sans-serif; max-width:520px; margin:0 auto; color:#142A44;">
       <div style="background:#0B1E33; padding:24px 28px; text-align:center;">
-        <img src="${CREST_URL}" alt="Nigerian Navy Crest" width="56" height="56" style="display:block; margin:0 auto 12px;">
-        <p style="color:#C6A15B; font-size:12px; letter-spacing:1px; text-transform:uppercase; margin:0 0 6px;">Nigerian Navy Polo Team</p>
+        <img src="${CREST_URL}" alt="Nigerian Navy Polo Association logo" width="72" height="72" style="display:block; margin:0 auto 12px;">
+        <p style="color:#C6A15B; font-size:12px; letter-spacing:1px; text-transform:uppercase; margin:0 0 6px;">Nigerian Navy Polo Association</p>
         <h1 style="color:#EFE9DC; font-size:20px; margin:0;">Enquiry Received</h1>
       </div>
       <div style="padding:28px; border:1px solid #eee; border-top:none;">
         <p>Hi ${escapeHtml(enquiry.name || 'there')},</p>
-        <p>Thanks for reaching out to the Nigerian Navy Polo Team. We've received your enquiry and a member of the secretariat will get back to you within 3–5 working days.</p>
+        <p>Thanks for reaching out to the Nigerian Navy Polo Association. We've received your enquiry and a member of the secretariat will get back to you within 3–5 working days.</p>
         <p style="background:#F8F6F1; border-left:3px solid #C6A15B; padding:12px 16px; color:#5B6B7A; font-style:italic;">
           "${escapeHtml(enquiry.message || '')}"
         </p>
-        <p style="margin-top:28px; color:#5B6B7A; font-size:13px;">— Nigerian Navy Polo Team Secretariat</p>
+        <p style="margin-top:28px; color:#5B6B7A; font-size:13px;">— Nigerian Navy Polo Association Secretariat</p>
       </div>
     </div>`;
 
@@ -85,24 +85,24 @@ function sendEnquiryConfirmation(enquiry) {
 }
 
 function sendApplicationConfirmation(application) {
-  const subject = 'Your membership application has been received — Nigerian Navy Polo Team';
+  const subject = 'Your membership application has been received — Nigerian Navy Polo Association';
   const text =
     `Hi ${application.fullName || 'there'},\n\n` +
-    `Thank you for applying for membership with the Nigerian Navy Polo Team. We've received your application ` +
+    `Thank you for applying for membership with the Nigerian Navy Polo Association. We've received your application ` +
     `and the secretariat will review it and be in touch within 5–7 working days.\n\n` +
-    `— Nigerian Navy Polo Team Secretariat`;
+    `— Nigerian Navy Polo Association Secretariat`;
 
   const html = `
     <div style="font-family:Arial,Helvetica,sans-serif; max-width:520px; margin:0 auto; color:#142A44;">
       <div style="background:#0B1E33; padding:24px 28px; text-align:center;">
-        <img src="${CREST_URL}" alt="Nigerian Navy Crest" width="56" height="56" style="display:block; margin:0 auto 12px;">
-        <p style="color:#C6A15B; font-size:12px; letter-spacing:1px; text-transform:uppercase; margin:0 0 6px;">Nigerian Navy Polo Team</p>
+        <img src="${CREST_URL}" alt="Nigerian Navy Polo Association logo" width="72" height="72" style="display:block; margin:0 auto 12px;">
+        <p style="color:#C6A15B; font-size:12px; letter-spacing:1px; text-transform:uppercase; margin:0 0 6px;">Nigerian Navy Polo Association</p>
         <h1 style="color:#EFE9DC; font-size:20px; margin:0;">Application Received</h1>
       </div>
       <div style="padding:28px; border:1px solid #eee; border-top:none;">
         <p>Hi ${escapeHtml(application.fullName || 'there')},</p>
-        <p>Thank you for applying for membership with the Nigerian Navy Polo Team. We've received your application and the secretariat will review it and be in touch within 5–7 working days.</p>
-        <p style="margin-top:28px; color:#5B6B7A; font-size:13px;">— Nigerian Navy Polo Team Secretariat</p>
+        <p>Thank you for applying for membership with the Nigerian Navy Polo Association. We've received your application and the secretariat will review it and be in touch within 5–7 working days.</p>
+        <p style="margin-top:28px; color:#5B6B7A; font-size:13px;">— Nigerian Navy Polo Association Secretariat</p>
       </div>
     </div>`;
 

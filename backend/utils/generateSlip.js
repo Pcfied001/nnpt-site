@@ -8,8 +8,6 @@ const OXBLOOD = '#7B2D26';
 const INK = '#142A44';
 const MIST = '#5B6B7A';
 
-const SLIPS_DIR = path.join(__dirname, '..', 'data', 'slips');
-if (!fs.existsSync(SLIPS_DIR)) fs.mkdirSync(SLIPS_DIR, { recursive: true });
 
 function refNumber(application) {
   var prefix = application.applicantType === 'civilian' ? 'NNPT/CIV' : 'NNPT/NP';
@@ -25,39 +23,47 @@ function row(doc, x, y, label, value) {
     .text(value && String(value).trim() ? value : '—', x, y + 13, { width: 250 });
 }
 
-// builds the internal premium slip PDF, saves to data/slips/{id}.pdf
+// draws the internal premium slip PDF straight into `outStream` (e.g. the HTTP response).
+// slips are built on demand from the saved application, so no PDF files need to be stored.
 // internal only — never gets emailed to the applicant, secretariat has to issue it manually
-function generateSlip(application) {
+function streamSlip(application, outStream) {
   const isCivilian = application.applicantType === 'civilian';
-  const filePath = path.join(SLIPS_DIR, application.id + '.pdf');
 
   const doc = new PDFDocument({ size: 'A4', margin: 0 });
-  const stream = fs.createWriteStream(filePath);
-  doc.pipe(stream);
+  doc.pipe(outStream);
 
   const pageW = doc.page.width;
   const marginX = 54;
   const contentW = pageW - marginX * 2;
-  const crestPath = path.join(__dirname, '..', 'assets', 'nn-crest.png');
+  const navyCrestPath = path.join(__dirname, '..', 'assets', 'nn-crest.png');
+  const poloLogoPath = path.join(__dirname, '..', 'assets', 'logo-npa.png');
 
   // ---- Header band ----
   doc.rect(0, 0, pageW, 118).fill(NAVY);
 
-  if (fs.existsSync(crestPath)) {
-    const crestH = 88;
-    const crestW = crestH * (148 / 200);
-    doc.image(crestPath, pageW - marginX - crestW, 15, { height: crestH });
+  const logoH = 88;
+  const logoY = 15;
+  // left: Nigerian Navy crest (portrait, 148 x 200)
+  const navyW = logoH * (148 / 200);
+  const textX = marginX + navyW + 18;
+  if (fs.existsSync(navyCrestPath)) {
+    doc.image(navyCrestPath, marginX, logoY, { height: logoH });
+  }
+  // right: Nigerian Navy Polo Association logo (square)
+  if (fs.existsSync(poloLogoPath)) {
+    doc.image(poloLogoPath, pageW - marginX - logoH, logoY, { height: logoH });
   }
 
+  const textW = pageW - marginX - logoH - 18 - textX;
   doc.fillColor(GOLD).font('Helvetica-Bold').fontSize(9)
-    .text('NIGERIAN NAVY POLO TEAM', marginX, 34, { characterSpacing: 1.2 });
+    .text('NIGERIAN NAVY POLO ASSOCIATION', textX, 34, { characterSpacing: 1.2, width: textW, lineBreak: false });
   doc.fillColor('#EFE9DC').font('Helvetica-Bold').fontSize(20)
-    .text('Membership Premium Slip', marginX, 50);
+    .text('Membership Premium Slip', textX, 50, { width: textW, lineBreak: false });
   doc.fillColor(GOLD).font('Helvetica-Bold').fontSize(9.5)
-    .text(isCivilian ? 'CIVILIAN APPLICANT' : 'NAVAL PERSONNEL (SERVING OR RETIRED)', marginX, 82, { characterSpacing: 1 });
+    .text(isCivilian ? 'CIVILIAN APPLICANT' : 'NAVAL PERSONNEL (SERVING OR RETIRED)', textX, 82, { characterSpacing: 1, width: textW, lineBreak: false });
 
   doc.fillColor('#EFE9DC').font('Helvetica').fontSize(9)
-    .text('Reference: ' + refNumber(application), marginX, 96);
+    .text('Reference: ' + refNumber(application), textX, 96, { width: textW, lineBreak: false });
 
   // Internal-use watermark banner
   doc.rect(0, 118, pageW, 26).fill(OXBLOOD);
@@ -132,14 +138,9 @@ function generateSlip(application) {
   const footerY = doc.page.height - 46;
   doc.moveTo(marginX, footerY).lineTo(pageW - marginX, footerY).lineWidth(0.75).strokeColor('#D8D2C4').stroke();
   doc.font('Helvetica').fontSize(8).fillColor(MIST)
-    .text('Nigerian Navy Polo Team · Secretariat Document · ' + refNumber(application), marginX, footerY + 10);
+    .text('Nigerian Navy Polo Association · Secretariat Document · ' + refNumber(application), marginX, footerY + 10);
 
   doc.end();
-
-  return new Promise((resolve, reject) => {
-    stream.on('finish', () => resolve(filePath));
-    stream.on('error', reject);
-  });
 }
 
-module.exports = { generateSlip, refNumber };
+module.exports = { streamSlip, refNumber };
