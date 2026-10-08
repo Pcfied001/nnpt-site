@@ -89,25 +89,224 @@ document.addEventListener('DOMContentLoaded', function () {
   var membershipForm = document.getElementById('membershipForm');
   if (membershipForm) {
     var typeRadios = membershipForm.querySelectorAll('input[name="applicantType"]');
+    var summaryEl = document.getElementById('formErrorSummary');
+    var photoInput = document.getElementById('aPhoto');
+    var photoPreview = document.getElementById('photoPreview');
+    var photoHint = document.getElementById('photoHint');
+    var photoDataUrl = '';            // the processed JPEG that gets sent and printed on the slip
+    var PHOTO_HINT_DEFAULT = photoHint ? photoHint.textContent : '';
 
+    // payload key -> input id (also used to highlight fields the server rejects)
+    var FIELD_IDS = {
+      fullName: 'aFullName', email: 'aEmail', phone: 'aPhone', address: 'aAddress',
+      dateOfBirth: 'aDob', sex: 'aSex', photo: 'aPhoto', tier: 'aTier', experience: 'aExperience',
+      serviceNo: 'aServiceNo', rank: 'aRank', serviceStatus: 'aServiceStatus', command: 'aCommand',
+      occupation: 'aOccupation', org: 'aOrg', sponsor: 'aSponsor', note: 'aNote'
+    };
+    var TYPE_FIELDS = {
+      serviceman: ['aServiceNo', 'aRank', 'aServiceStatus', 'aCommand'],
+      civilian: ['aOccupation', 'aOrg', 'aSponsor']
+    };
+
+    /* ----- date of birth can't be in the future ----- */
+    function todayISO() {
+      var d = new Date();
+      return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
+    }
+    var dobInput = document.getElementById('aDob');
+    if (dobInput) dobInput.max = todayISO();
+
+    /* ----- field error helpers ----- */
+    function fieldWrap(el) { return el.closest('.field, .check-field'); }
+
+    function setFieldError(el, msg) {
+      var wrap = fieldWrap(el);
+      if (!wrap) return;
+      wrap.classList.add('has-error');
+      el.setAttribute('aria-invalid', 'true');
+      var err = wrap.querySelector('.field-error');
+      if (!err) {
+        err = document.createElement('span');
+        err.className = 'field-error';
+        wrap.appendChild(err);
+      }
+      err.textContent = msg;
+    }
+
+    function clearFieldError(el) {
+      var wrap = fieldWrap(el);
+      if (!wrap) return;
+      wrap.classList.remove('has-error');
+      el.removeAttribute('aria-invalid');
+      var err = wrap.querySelector('.field-error');
+      if (err) err.textContent = '';
+    }
+
+    function markRequired(el) {
+      var wrap = fieldWrap(el);
+      if (wrap && wrap.classList.contains('field')) wrap.classList.toggle('is-required', el.required);
+    }
+
+    // returns an error message, or '' if the field is fine
+    function fieldMessage(el) {
+      if (el.type === 'checkbox') return el.checked ? '' : 'Please tick this box to confirm.';
+      if (el.id === 'aPhoto') return photoDataUrl ? '' : 'Please add your passport photograph.';
+
+      var val = (el.value || '').trim();
+      if (!val) return el.tagName === 'SELECT' ? 'Please choose an option.' : 'This field is required.';
+
+      if (el.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) return 'Enter a valid email address.';
+      if (el.type === 'tel') {
+        var digits = val.replace(/\D/g, '');
+        if (!/^[+()\-.\s\d]+$/.test(val) || digits.length < 7 || digits.length > 15) return 'Enter a valid phone number.';
+      }
+      if (el.type === 'date') {
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(val) || isNaN(new Date(val + 'T00:00:00').getTime())) return 'Enter a valid date.';
+        if (val > todayISO()) return 'Date of birth cannot be in the future.';
+        if (val < '1900-01-01') return 'Enter a valid date of birth.';
+      }
+      return '';
+    }
+
+    function refreshSummary() {
+      if (!summaryEl) return;
+      var n = membershipForm.querySelectorAll('.has-error').length;
+      if (!n) { summaryEl.hidden = true; summaryEl.textContent = ''; return; }
+      summaryEl.hidden = false;
+      summaryEl.textContent = n === 1
+        ? 'Your application can\'t be submitted yet — 1 field still needs your attention (highlighted above).'
+        : 'Your application can\'t be submitted yet — ' + n + ' fields still need your attention (highlighted above).';
+    }
+
+    // checks every visible required field. returns true only if the whole form is complete.
+    function validateForm() {
+      var first = null;
+      membershipForm.querySelectorAll('[required]').forEach(function (el) {
+        if (el.offsetParent === null) { clearFieldError(el); return; }   // belongs to the other applicant type
+        var msg = fieldMessage(el);
+        if (msg) { setFieldError(el, msg); if (!first) first = el; }
+        else clearFieldError(el);
+      });
+      refreshSummary();
+      if (first) {
+        first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        try { first.focus({ preventScroll: true }); } catch (err) { first.focus(); }
+        return false;
+      }
+      return true;
+    }
+
+    // once a field has been flagged, re-check it as the person fixes it
+    function recheck(e) {
+      var el = e.target;
+      if (!el || !el.required || el.id === 'aPhoto') return;
+      var wrap = fieldWrap(el);
+      if (!wrap || !wrap.classList.contains('has-error')) return;
+      var msg = fieldMessage(el);
+      if (msg) setFieldError(el, msg); else clearFieldError(el);
+      refreshSummary();
+    }
+    membershipForm.addEventListener('input', recheck);
+    membershipForm.addEventListener('change', recheck);
+
+    /* ----- naval personnel vs civilian ----- */
     function syncApplicantType() {
       var selected = membershipForm.querySelector('input[name="applicantType"]:checked');
       var value = selected ? selected.value : 'serviceman';
       membershipForm.classList.remove('show-serviceman', 'show-civilian');
       membershipForm.classList.add(value === 'civilian' ? 'show-civilian' : 'show-serviceman');
 
-      // naval personnel are filed on the permanent register, so service number + rank are mandatory for them
-      ['aServiceNo', 'aRank'].forEach(function (id) {
-        var el = document.getElementById(id);
-        if (el) el.required = (value !== 'civilian');
+      // every field in the block that's showing is mandatory; the hidden block's fields are not
+      Object.keys(TYPE_FIELDS).forEach(function (type) {
+        TYPE_FIELDS[type].forEach(function (id) {
+          var el = document.getElementById(id);
+          if (!el) return;
+          el.required = (type === value);
+          if (type !== value) clearFieldError(el);
+          markRequired(el);
+        });
       });
+      refreshSummary();
     }
 
     typeRadios.forEach(function (radio) {
       radio.addEventListener('change', syncApplicantType);
     });
+    membershipForm.querySelectorAll('[required]').forEach(markRequired);
     syncApplicantType();
 
+    /* ----- passport photo: shrink to a print-ready JPEG, preview it exactly as it will be cropped ----- */
+    function prepareApplicantPhoto(file) {
+      return new Promise(function (resolve, reject) {
+        if (!/^image\/(jpeg|png|webp)$/.test(file.type)) {
+          return reject(new Error('Please choose a JPG, PNG or WebP photo.'));
+        }
+        if (file.size > 15 * 1024 * 1024) {
+          return reject(new Error('That photo is too large. Please choose one under 15 MB.'));
+        }
+        var url = URL.createObjectURL(file);
+        var img = new Image();
+        img.onload = function () {
+          URL.revokeObjectURL(url);
+          var w = img.naturalWidth, h = img.naturalHeight;
+          if (Math.min(w, h) < 200) {
+            return reject(new Error('That photo is too small to print clearly. Please use one at least 200 × 200 pixels.'));
+          }
+          var scale = Math.min(1, 900 / Math.max(w, h));
+          var canvas = document.createElement('canvas');
+          canvas.width = Math.round(w * scale);
+          canvas.height = Math.round(h * scale);
+          var ctx = canvas.getContext('2d');
+          ctx.fillStyle = '#ffffff';                      // PNG transparency -> white, not black
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          resolve(canvas.toDataURL('image/jpeg', 0.88));
+        };
+        img.onerror = function () {
+          URL.revokeObjectURL(url);
+          reject(new Error('We couldn\'t read that image. Please try a different photo.'));
+        };
+        img.src = url;
+      });
+    }
+
+    function resetPhotoPreview() {
+      photoDataUrl = '';
+      if (photoPreview) photoPreview.innerHTML = '<span>No photo<br>selected</span>';
+      if (photoHint) { photoHint.textContent = PHOTO_HINT_DEFAULT; photoHint.classList.remove('is-ok'); }
+    }
+
+    if (photoInput) {
+      photoInput.addEventListener('change', function () {
+        var file = photoInput.files && photoInput.files[0];
+        resetPhotoPreview();
+        if (!file) return;
+        if (photoHint) photoHint.textContent = 'Preparing your photo…';
+        prepareApplicantPhoto(file).then(function (dataUrl) {
+          photoDataUrl = dataUrl;
+          if (photoPreview) {
+            photoPreview.innerHTML = '';
+            var thumb = document.createElement('img');
+            thumb.src = dataUrl;
+            thumb.alt = 'Your passport photograph preview';
+            photoPreview.appendChild(thumb);
+          }
+          if (photoHint) {
+            photoHint.textContent = 'Photo added. This is how it will appear on your membership slip.';
+            photoHint.classList.add('is-ok');
+          }
+          clearFieldError(photoInput);
+          refreshSummary();
+        }).catch(function (err) {
+          photoInput.value = '';
+          resetPhotoPreview();
+          setFieldError(photoInput, err.message);
+          refreshSummary();
+        });
+      });
+    }
+
+    /* ----- success popup ----- */
     var submitOverlay = document.getElementById('submitModalOverlay');
     var submitClose = document.getElementById('submitModalClose');
     var submitOk = document.getElementById('submitModalOk');
@@ -131,29 +330,26 @@ document.addEventListener('DOMContentLoaded', function () {
       if (e.key === 'Escape' && submitOverlay && submitOverlay.classList.contains('active')) closeSubmitModal();
     });
 
+    /* ----- submit ----- */
     membershipForm.addEventListener('submit', function (e) {
       e.preventDefault();
       var note = document.getElementById('applyNote');
       var btn = document.getElementById('applySubmit');
-      var selectedType = membershipForm.querySelector('input[name="applicantType"]:checked');
 
-      var payload = {
-        applicantType: selectedType ? selectedType.value : 'serviceman',
-        fullName: (document.getElementById('aFullName') || {}).value,
-        email: (document.getElementById('aEmail') || {}).value,
-        phone: (document.getElementById('aPhone') || {}).value,
-        address: (document.getElementById('aAddress') || {}).value,
-        tier: (document.getElementById('aTier') || {}).value,
-        experience: (document.getElementById('aExperience') || {}).value,
-        serviceNo: (document.getElementById('aServiceNo') || {}).value,
-        rank: (document.getElementById('aRank') || {}).value,
-        command: (document.getElementById('aCommand') || {}).value,
-        serviceStatus: (document.getElementById('aServiceStatus') || {}).value,
-        occupation: (document.getElementById('aOccupation') || {}).value,
-        org: (document.getElementById('aOrg') || {}).value,
-        sponsor: (document.getElementById('aSponsor') || {}).value,
-        note: (document.getElementById('aNote') || {}).value
-      };
+      // nothing is sent until every visible field is complete
+      if (!validateForm()) {
+        if (note) note.textContent = 'Please complete every highlighted field before submitting.';
+        return;
+      }
+
+      var selectedType = membershipForm.querySelector('input[name="applicantType"]:checked');
+      var payload = { applicantType: selectedType ? selectedType.value : 'serviceman' };
+      Object.keys(FIELD_IDS).forEach(function (key) {
+        if (key === 'photo') return;
+        var el = document.getElementById(FIELD_IDS[key]);
+        payload[key] = el ? (el.value || '').trim() : '';
+      });
+      payload.photo = photoDataUrl;
 
       if (btn) { btn.disabled = true; btn.textContent = 'Submitting…'; }
 
@@ -163,17 +359,38 @@ document.addEventListener('DOMContentLoaded', function () {
         body: JSON.stringify(payload)
       })
         .then(function (res) {
-          if (!res.ok) throw new Error('Submission failed');
-          return res.json();
+          return res.json().catch(function () { return {}; }).then(function (data) {
+            if (!res.ok) {
+              var err = new Error(data.error || 'Submission failed');
+              err.fields = data.fields || null;
+              err.status = res.status;
+              throw err;
+            }
+            return data;
+          });
         })
         .then(function () {
           if (note) note.textContent = 'Thank you — your application has been received. The secretariat will contact you within 5–7 working days.';
           if (btn) { btn.textContent = 'Application Submitted'; }
           openSubmitModal();
         })
-        .catch(function () {
-          if (note) note.textContent = 'We couldn\'t submit this automatically. Please email your details to secretariat@nnpolo.org and the secretariat will follow up directly.';
+        .catch(function (err) {
           if (btn) { btn.disabled = false; btn.textContent = 'Submit Application'; }
+          // the server found something incomplete/invalid: highlight it just like the browser check does
+          if (err && err.fields) {
+            var first = null;
+            Object.keys(err.fields).forEach(function (key) {
+              var el = document.getElementById(FIELD_IDS[key]);
+              if (!el) return;
+              setFieldError(el, err.fields[key]);
+              if (!first) first = el;
+            });
+            refreshSummary();
+            if (note) note.textContent = 'Please correct the highlighted fields and submit again.';
+            if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return;
+          }
+          if (note) note.textContent = 'We couldn\'t submit this automatically. Please email your details to secretariat@nnpolo.org and the secretariat will follow up directly.';
         });
     });
   }

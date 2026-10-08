@@ -117,7 +117,7 @@
   <section id="apply">
     <div class="wrap">
 
-      <form id="membershipForm" class="application-form">
+      <form id="membershipForm" class="application-form" novalidate>
 
         <div class="form-section-label mono">Step 1 — Applicant Type</div>
         <div class="applicant-type" role="radiogroup" aria-label="Applicant type">
@@ -143,6 +143,14 @@
           <div class="field"><label for="aEmail">Email Address</label><input id="aEmail" type="email" required></div>
           <div class="field"><label for="aPhone">Phone Number</label><input id="aPhone" type="tel" required></div>
           <div class="field"><label for="aAddress">Residential Address</label><input id="aAddress" type="text" required></div>
+          <div class="field"><label for="aDob">Date of Birth</label><input id="aDob" type="date" min="1900-01-01" required></div>
+          <div class="field"><label for="aSex">Sex</label>
+            <select id="aSex" required>
+              <option value="">Select…</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select>
+          </div>
           <div class="field"><label for="aTier">Membership Category</label>
             <select id="aTier">
               <option>Associate</option>
@@ -157,6 +165,16 @@
               <option>Intermediate</option>
               <option>Advanced / Competitive</option>
             </select>
+          </div>
+          <div class="field photo-field" style="grid-column:1 / -1;">
+            <label for="aPhoto">Passport Photograph</label>
+            <div class="photo-upload" id="photoUpload">
+              <div class="photo-preview" id="photoPreview"><span>No photo<br>selected</span></div>
+              <div class="photo-controls">
+                <input id="aPhoto" type="file" accept="image/jpeg,image/png,image/webp" required>
+                <p class="photo-hint" id="photoHint">A clear, front-facing, passport-style photo on a plain background (JPG, PNG or WebP). This is the photo that will be printed on your membership slip.</p>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -179,7 +197,7 @@
                 <option value="retired">Retired</option>
               </select>
             </div>
-            <div class="field"><label for="aCommand">Current Command / Base</label><input id="aCommand" type="text"></div>
+            <div class="field"><label for="aCommand">Command / Base (last served, if retired)</label><input id="aCommand" type="text"></div>
             <datalist id="rankSuggestions">
               <option value="Admiral"><option value="Vice Admiral"><option value="Rear Admiral"><option value="Commodore">
               <option value="Captain"><option value="Commander"><option value="Lieutenant Commander"><option value="Lieutenant">
@@ -210,13 +228,17 @@
 
         <div class="form-section-label mono">Step 4 — About You</div>
         <div class="form-grid">
-          <div class="field" style="grid-column:1 / -1;"><label for="aNote">Tell us why you'd like to join</label><textarea id="aNote"></textarea></div>
+          <div class="field" style="grid-column:1 / -1;"><label for="aNote">Tell us why you'd like to join</label><textarea id="aNote" required></textarea></div>
         </div>
 
-        <label class="declaration">
-          <input type="checkbox" required>
-          <span>I confirm that the information provided is accurate to the best of my knowledge.</span>
-        </label>
+        <div class="check-field">
+          <label class="declaration">
+            <input type="checkbox" id="aDeclaration" required>
+            <span>I confirm that the information provided is accurate to the best of my knowledge.</span>
+          </label>
+        </div>
+
+        <div class="form-error-summary" id="formErrorSummary" role="alert" hidden></div>
 
         <button type="submit" class="submit-btn" id="applySubmit">Submit Application</button>
         <p class="form-note" id="applyNote">Applications are reviewed by the secretariat; you'll be contacted within 5–7 working days.</p>

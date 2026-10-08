@@ -105,6 +105,7 @@
   .badge-archived{ color:var(--mist); border-color:rgba(140,162,179,0.5); }
   .slip-link{ display:inline-block; padding:6px 14px; font-size:0.78rem; font-family:'JetBrains Mono',monospace; color:var(--navy-deep); background:var(--gold); text-decoration:none; }
   .slip-link:hover{ background:var(--gold-bright); }
+  .app-photo{ width:40px; height:50px; object-fit:cover; display:block; border:1px solid var(--gold); }
   .slip-missing{ color:var(--mist); font-size:0.78rem; font-style:italic; }
   .card-toggle{
     display:inline-block; padding:6px 14px; font-size:0.75rem; font-family:'JetBrains Mono',monospace;
@@ -113,6 +114,9 @@
   }
   .card-toggle:hover{ border-color:var(--gold); color:var(--gold); }
   .card-toggle.is-printed{ background:rgba(198,161,91,0.15); border-color:var(--gold); color:var(--gold-bright); }
+  .app-delete{ background:transparent; border:1px solid rgba(217,105,95,0.6); color:#F2A199; padding:6px 12px; font-size:0.74rem; cursor:pointer; font-family:'JetBrains Mono',monospace; }
+  .app-delete:hover{ background:rgba(217,105,95,0.15); }
+  .app-delete:disabled{ opacity:0.6; cursor:default; }
   .card-toggle:disabled{ opacity:0.6; cursor:default; }
   .card-timestamp{ margin-top:4px; font-size:0.68rem; color:var(--mist); }
   .admin-empty{ color:var(--mist); padding:40px; text-align:center; border:1px dashed rgba(198,161,91,0.25); line-height:1.7; }
@@ -637,14 +641,20 @@
       var slipCell = a.slipGenerated
         ? '<a class="slip-link" target="_blank" rel="noopener" href="/api/applications/' + a.id + '/slip">View Slip</a>'
         : '<span class="slip-missing">Not generated</span>';
+      var photoCell = a.hasPhoto
+        ? '<a target="_blank" rel="noopener" href="/api/applications/' + a.id + '/photo"><img class="app-photo" alt="Photo of ' + esc(a.fullName) + '" src="/api/applications/' + a.id + '/photo"></a>'
+        : '<span class="slip-missing">None</span>';
       var printed = !!a.cardPrinted;
       var cardCell = '<button type="button" class="card-toggle ' + (printed ? 'is-printed' : '') + '" data-id="' + a.id + '" data-printed="' + printed + '">' +
         (printed ? '&#10003; Printed' : 'Mark Printed') + '</button>' +
         (printed && a.cardPrintedAt ? '<div class="card-timestamp">' + fmtDate(a.cardPrintedAt) + '</div>' : '');
       return '<tr>' +
         '<td>' + fmtDate(a.submittedAt) + '</td>' +
+        '<td>' + photoCell + '</td>' +
         '<td><span class="badge ' + (civ ? 'badge-civilian' : 'badge-serviceman') + '">' + (civ ? 'Civilian' : 'Naval Personnel') + '</span></td>' +
         '<td>' + esc(a.fullName) + '</td>' +
+        '<td>' + esc(a.dateOfBirth || '—') + '</td>' +
+        '<td>' + esc(a.sex || '—') + '</td>' +
         '<td>' + esc(a.rank || '—') + '</td>' +
         '<td>' + esc(a.email) + '</td>' +
         '<td>' + esc(a.phone) + '</td>' +
@@ -652,10 +662,11 @@
         '<td>' + esc(a.memberNo || '—') + '</td>' +
         '<td>' + esc(a.slipRef || '—') + '</td>' +
         '<td>' + slipCell + '</td>' +
-        '<td>' + cardCell + '</td></tr>';
+        '<td>' + cardCell + '</td>' +
+        '<td><button type="button" class="app-delete" data-id="' + a.id + '" data-name="' + esc(a.fullName) + '">Delete</button></td></tr>';
     }).join('');
 
-    wrap.innerHTML = '<div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Submitted</th><th>Type</th><th>Name</th><th>Rank</th><th>Email</th><th>Phone</th><th>Tier</th><th>Member No.</th><th>Ref</th><th>Slip</th><th>Membership Card</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
+    wrap.innerHTML = '<div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Submitted</th><th>Photo</th><th>Type</th><th>Name</th><th>DOB</th><th>Sex</th><th>Rank</th><th>Email</th><th>Phone</th><th>Tier</th><th>Member No.</th><th>Ref</th><th>Slip</th><th>Membership Card</th><th></th></tr></thead><tbody>' + rows + '</tbody></table></div>';
 
     wrap.querySelectorAll('.card-toggle').forEach(function (btn) {
       btn.addEventListener('click', function () {
@@ -664,6 +675,16 @@
         api('/api/applications/' + id, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ cardPrinted: !was }) })
           .then(loadApplications)
           .catch(function () { btn.disabled = false; btn.textContent = was ? '\u2713 Printed' : 'Mark Printed'; alert('Could not update card status. Please try again.'); });
+      });
+    });
+    wrap.querySelectorAll('.app-delete').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var name = btn.getAttribute('data-name') || 'this applicant';
+        if (!confirm('Permanently delete the application from ' + name + '?\n\nThis removes their details and photo and cannot be undone. (If they were added to the personnel register, that record stays.)')) return;
+        btn.disabled = true; btn.textContent = 'Deleting…';
+        api('/api/applications/' + btn.getAttribute('data-id'), { method: 'DELETE' })
+          .then(function () { toast('Application deleted'); return loadApplications(); })
+          .catch(function () { btn.disabled = false; btn.textContent = 'Delete'; alert('Could not delete the application. Please try again.'); });
       });
     });
   }

@@ -18,7 +18,8 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(cors());
-app.use(express.json());
+// the application form sends the passport photo inside the JSON body (~150 KB), so the default 100 KB limit is too small
+app.use(express.json({ limit: '3mb' }));
 
 // needs to come before express.static or the static handler serves this unprotected
 app.get('/admin.html', secretariatAuth, (req, res) => {

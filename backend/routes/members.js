@@ -32,7 +32,7 @@ router.get('/meta', (req, res) => {
 router.get('/export.csv', asyncHandler(async (req, res) => {
   const members = (await listMembers()).sort((a, b) => a.fullName.localeCompare(b.fullName));
   const cols = [
-    ['memberNo', 'Member No.'], ['fullName', 'Full Name'], ['rank', 'Rank'], ['rankCategory', 'Category'],
+    ['memberNo', 'Member No.'], ['fullName', 'Full Name'], ['dateOfBirth', 'Date of Birth'], ['sex', 'Sex'], ['rank', 'Rank'], ['rankCategory', 'Category'],
     ['serviceNo', 'Service No.'], ['command', 'Command / Base'], ['serviceStatus', 'Service Status'],
     ['status', 'Membership Status'], ['membershipTier', 'Tier'], ['phone', 'Phone'], ['email', 'Email'],
     ['address', 'Address'], ['createdAt', 'Registered'], ['notes', 'Notes']

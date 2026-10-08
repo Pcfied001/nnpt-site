@@ -16,11 +16,49 @@ function refNumber(application) {
   return prefix + '/' + year + '/' + padded;
 }
 
-function row(doc, x, y, label, value) {
+function row(doc, x, y, label, value, width) {
+  width = width || 250;
+  const text = value && String(value).trim() ? String(value) : '—';
   doc.font('Helvetica-Bold').fontSize(8.5).fillColor(MIST)
-    .text(label.toUpperCase(), x, y, { characterSpacing: 0.6 });
-  doc.font('Helvetica').fontSize(11.5).fillColor(INK)
-    .text(value && String(value).trim() ? value : '—', x, y + 13, { width: 250 });
+    .text(label.toUpperCase(), x, y, { characterSpacing: 0.6, width: width, lineBreak: false });
+  // shrink long values (down to 8pt) so they stay on one line inside their column
+  doc.font('Helvetica');
+  let size = 11.5;
+  while (size > 8 && doc.fontSize(size).widthOfString(text) > width) size -= 0.5;
+  doc.fontSize(size).fillColor(INK)
+    .text(text, x, y + 13, { width: width, lineBreak: false, ellipsis: true });
+}
+
+function formatDob(iso) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(iso || '')) return '';
+  const d = new Date(iso + 'T00:00:00Z');
+  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+}
+
+// the applicant's passport photo, cropped to fill the frame (same 4:5 crop the form previews).
+// applications made before photos were collected get a clearly-marked empty frame instead.
+function drawPhoto(doc, application, x, y, w, h) {
+  let drawn = false;
+  if (application.photo) {
+    try {
+      doc.save();
+      doc.rect(x, y, w, h).clip();      // 'cover' scales to fill but doesn't crop, so clip to the frame
+      doc.image(Buffer.from(application.photo, 'base64'), x, y, { cover: [w, h], align: 'center', valign: 'center' });
+      doc.restore();
+      drawn = true;
+    } catch (err) {
+      doc.restore();
+      console.error('Could not draw photo on slip for application', application.id, err.message);
+    }
+  }
+  if (!drawn) {
+    doc.rect(x, y, w, h).fill('#F8F6F1');
+    doc.rect(x + 0.5, y + 0.5, w - 1, h - 1).dash(3, { space: 3 }).lineWidth(0.75).strokeColor('#B9B2A0').stroke().undash();
+    doc.font('Helvetica-Bold').fontSize(8).fillColor(MIST)
+      .text('NO PHOTO', x, y + h / 2 - 9, { width: w, align: 'center', characterSpacing: 0.6, lineBreak: false });
+    doc.text('ON FILE', x, y + h / 2 + 2, { width: w, align: 'center', characterSpacing: 0.6, lineBreak: false });
+  }
+  doc.rect(x - 1.5, y - 1.5, w + 3, h + 3).lineWidth(1.5).strokeColor(GOLD).stroke();
 }
 
 // draws the internal premium slip PDF straight into `outStream` (e.g. the HTTP response).
@@ -77,29 +115,53 @@ function streamSlip(application, outStream) {
   y += 22;
 
   const colW = contentW / 2;
-  row(doc, marginX, y, 'Full Name', application.fullName);
-  row(doc, marginX + colW, y, 'Membership Tier', application.tier);
-  y += 40;
 
-  row(doc, marginX, y, 'Email Address', application.email);
-  row(doc, marginX + colW, y, 'Phone Number', application.phone);
-  y += 40;
+  // passport photo sits top-right of the details; the first four rows run down its left side
+  const photoW = 108, photoH = 135;
+  const photoX = pageW - marginX - photoW;
+  drawPhoto(doc, application, photoX, y, photoW, photoH);
 
-  row(doc, marginX, y, 'Address', application.address);
-  row(doc, marginX + colW, y, 'Polo Experience', application.experience);
+  const c1 = marginX, c1W = 190;
+  const c2 = marginX + 205, c2W = photoX - 14 - c2;
+  const rowH = 34;
+
+  row(doc, c1, y, 'Full Name', application.fullName, c1W);
+  row(doc, c2, y, 'Membership Tier', application.tier, c2W);
+  y += rowH;
+
+  row(doc, c1, y, 'Date of Birth', formatDob(application.dateOfBirth), c1W);
+  row(doc, c2, y, 'Sex', application.sex, c2W);
+  y += rowH;
+
+  row(doc, c1, y, 'Email Address', application.email, c1W);
+  row(doc, c2, y, 'Phone Number', application.phone, c2W);
+  y += rowH;
+
+  if (isCivilian) {
+    row(doc, c1, y, 'Occupation', application.occupation, c1W);
+    row(doc, c2, y, 'Organisation', application.org, c2W);
+  } else {
+    row(doc, c1, y, 'Service Number', application.serviceNo, c1W);
+    row(doc, c2, y, 'Rank', application.rank, c2W);
+  }
+  y += rowH;
+
+  // below the photo: full-width rows
+  y += photoH - rowH * 4 + 16;
+
+  row(doc, marginX, y, 'Address', application.address, contentW);
   y += 40;
 
   if (isCivilian) {
-    row(doc, marginX, y, 'Occupation', application.occupation);
-    row(doc, marginX + colW, y, 'Organisation', application.org);
-    y += 40;
-    row(doc, marginX, y, 'Referee / Sponsor', application.sponsor);
+    row(doc, marginX, y, 'Referee / Sponsor', application.sponsor, colW - 12);
+    row(doc, marginX + colW, y, 'Polo Experience', application.experience, colW - 12);
     y += 40;
   } else {
-    row(doc, marginX, y, 'Service Number', application.serviceNo);
-    row(doc, marginX + colW, y, 'Rank', application.rank);
+    const statusLabel = application.serviceStatus === 'retired' ? 'Retired' : (application.serviceStatus === 'serving' ? 'Serving' : '');
+    row(doc, marginX, y, 'Command / Unit', application.command, colW - 12);
+    row(doc, marginX + colW, y, 'Service Status', statusLabel, colW - 12);
     y += 40;
-    row(doc, marginX, y, 'Command / Unit', application.command);
+    row(doc, marginX, y, 'Polo Experience', application.experience, colW - 12);
     y += 40;
   }
 

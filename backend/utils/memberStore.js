@@ -60,6 +60,8 @@ async function createMember(data, opts) {
     source: opts.source || 'secretariat',
     applicationId: opts.applicationId || null,
     fullName: clean(data.fullName),
+    dateOfBirth: clean(data.dateOfBirth) || '',
+    sex: clean(data.sex) || '',
     serviceNo: clean(data.serviceNo),
     rank,
     command: clean(data.command) || '',
@@ -116,6 +118,8 @@ async function enrolFromApplication(application) {
   try {
     const member = await createMember({
       fullName: application.fullName,
+      dateOfBirth: application.dateOfBirth,
+      sex: application.sex,
       serviceNo: application.serviceNo,
       rank: application.rank,
       command: application.command,

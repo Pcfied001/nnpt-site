@@ -6,36 +6,46 @@ const asyncHandler = require('../utils/asyncHandler');
 const { sendApplicationConfirmation } = require('../utils/mailer');
 const { getDb, nextId, strip } = require('../config/db');
 const { enrolFromApplication } = require('../utils/memberStore');
+const { validateApplication } = require('../utils/validateApplication');
 
 const col = () => getDb().collection('applications');
 
+// the photo is a ~150 KB base64 string — never send it in JSON; it has its own endpoint
+function withoutPhoto(doc) {
+  if (!doc) return doc;
+  const { photo, ...rest } = strip(doc);
+  return rest;
+}
+
 // list apps, needs login
 router.get('/', secretariatAuth, asyncHandler(async (req, res) => {
-  const docs = await col().find({}).sort({ id: 1 }).toArray();
+  const docs = await col().find({}, { projection: { photo: 0 } }).sort({ id: 1 }).toArray();
   res.json(docs.map(strip));
 }));
 
 // public — anyone can submit
 router.post('/', asyncHandler(async (req, res) => {
+  // every field is mandatory (naval-personnel or civilian set, depending on type), plus the photo
+  const { errors, values } = validateApplication(req.body);
+  if (Object.keys(errors).length) {
+    return res.status(400).json({
+      error: 'Please complete every required field. Missing or invalid: ' + Object.keys(errors).join(', ') + '.',
+      fields: errors
+    });
+  }
   const {
-    applicantType, fullName, email, phone, address, tier, experience,
-    serviceNo, rank, command, serviceStatus, occupation, org, sponsor, note
-  } = req.body || {};
-
-  if (!fullName || !email || !phone) {
-    return res.status(400).json({ error: 'fullName, email, and phone are required' });
-  }
-  // naval personnel go on the permanent register, so we need to be able to identify them
-  if (applicantType !== 'civilian' && (!serviceNo || !String(serviceNo).trim() || !rank || !String(rank).trim())) {
-    return res.status(400).json({ error: 'Service number and rank are required for naval personnel' });
-  }
+    applicantType, fullName, email, phone, address, dateOfBirth, sex, tier, experience,
+    serviceNo, rank, command, serviceStatus, occupation, org, sponsor, note, photo
+  } = values;
 
   const id = await nextId('applications');
   const newApplication = {
     id,
     submittedAt: new Date().toISOString(),
-    applicantType, fullName, email, phone, address, tier, experience,
+    applicantType, fullName, email, phone, address, dateOfBirth, sex, tier, experience,
     serviceNo, rank, command, serviceStatus, occupation, org, sponsor, note,
+    photo,            // base64 JPEG — the slip PDF prints this automatically
+    hasPhoto: true,
     status: 'pending',
     cardPrinted: false,
     cardPrintedAt: null
@@ -69,7 +79,16 @@ router.post('/', asyncHandler(async (req, res) => {
   }
 
   await col().updateOne({ id }, { $set: extra });
-  res.status(201).json(Object.assign(newApplication, extra));
+  res.status(201).json(Object.assign(withoutPhoto(newApplication), extra));
+}));
+
+// the applicant's photo as an image, login required
+router.get('/:id/photo', secretariatAuth, asyncHandler(async (req, res) => {
+  const doc = await col().findOne({ id: Number(req.params.id) }, { projection: { photo: 1 } });
+  if (!doc || !doc.photo) return res.status(404).json({ error: 'No photo on file for this application' });
+  res.setHeader('Content-Type', 'image/jpeg');
+  res.setHeader('Cache-Control', 'private, max-age=3600');
+  res.send(Buffer.from(doc.photo, 'base64'));
 }));
 
 // the slip PDF, login required, no link to this anywhere public
@@ -97,7 +116,16 @@ router.patch('/:id', secretariatAuth, asyncHandler(async (req, res) => {
 
   const result = await col().findOneAndUpdate({ id }, { $set: update }, { returnDocument: 'after' });
   if (!result) return res.status(404).json({ error: 'Application not found' });
-  res.json(strip(result));
+  res.json(withoutPhoto(result));
+}));
+
+// permanently remove an application (admin only). Naval personnel who were already filed on the
+// personnel register stay there — the register is permanent and is managed from its own tab.
+router.delete('/:id', secretariatAuth, asyncHandler(async (req, res) => {
+  const id = Number(req.params.id);
+  const result = await col().deleteOne({ id });
+  if (!result.deletedCount) return res.status(404).json({ error: 'Application not found' });
+  res.json({ deleted: true, id });
 }));
 
 module.exports = router;
