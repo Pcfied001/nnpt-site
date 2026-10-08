@@ -13,8 +13,10 @@
 <style>
   body{ background:var(--navy-deep); }
   .admin-wrap{ max-width:1240px; margin:0 auto; padding:48px 24px 100px; }
-  .admin-header{ margin-bottom:28px; display:flex; align-items:center; gap:20px; }
+  .admin-header{ margin-bottom:28px; display:flex; align-items:center; justify-content:space-between; gap:20px; }
   .admin-header img{ width:64px; height:64px; object-fit:contain; flex-shrink:0; }
+  .admin-header .titles{ flex:1; text-align:center; }
+  @media (max-width:520px){ .admin-header{ gap:10px; } .admin-header img{ width:46px; height:46px; } }
   .admin-header span.mono{ color:var(--gold); }
   .admin-header h1{ color:var(--parchment); margin:4px 0 0; font-size:2rem; }
 
@@ -150,6 +152,25 @@
   .m-error.show{ display:block; }
   .toast{ position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--gold); color:var(--navy-deep); padding:12px 22px; font-size:0.88rem; opacity:0; pointer-events:none; transition:all .25s; z-index:1100; }
   .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+  /* slideshow manager */
+  .ss-bar{ display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:space-between; margin-bottom:16px; }
+  .ss-count{ color:var(--mist-bright); font-size:0.92rem; }
+  .ss-count strong{ color:var(--gold-bright); font-size:1.1rem; }
+  .ss-note{ color:var(--mist); font-size:0.82rem; line-height:1.6; max-width:760px; margin-bottom:18px; }
+  .ss-warn{ color:#E8C27A; font-size:0.82rem; margin-top:4px; }
+  .ss-dirty{ color:var(--gold-bright); font-size:0.8rem; margin-left:10px; }
+  .ss-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); gap:14px; }
+  .ss-card{ background:var(--navy-ink); border:1px solid rgba(198,161,91,0.18); display:flex; flex-direction:column; }
+  .ss-card.on{ border-color:var(--gold); box-shadow:0 0 0 1px var(--gold) inset; }
+  .ss-card .pic{ position:relative; aspect-ratio:4/3; overflow:hidden; background:#06101c; cursor:pointer; border:0; padding:0; }
+  .ss-card .pic img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .ss-card .tick{ position:absolute; top:8px; right:8px; background:var(--gold); color:var(--navy-deep); font-family:'JetBrains Mono',monospace; font-size:0.62rem; padding:3px 8px; letter-spacing:0.05em; display:none; }
+  .ss-card.on .tick{ display:block; }
+  .ss-card .meta{ padding:10px 12px 12px; display:flex; flex-direction:column; gap:8px; flex:1; }
+  .ss-card .lbl{ color:var(--parchment); font-size:0.82rem; line-height:1.35; min-height:2.2em; }
+  .ss-toggle{ padding:7px 10px; background:transparent; color:var(--gold); border:1px solid var(--gold); cursor:pointer; font-family:'JetBrains Mono',monospace; font-size:0.68rem; letter-spacing:0.04em; text-transform:uppercase; }
+  .ss-toggle:hover{ background:rgba(198,161,91,0.12); }
+  .ss-card.on .ss-toggle{ background:var(--gold); color:var(--navy-deep); }
   .admin-section h2{ color:var(--parchment); font-size:1.4rem; margin-bottom:16px; }
   @media (max-width:640px){
     .m-grid{ grid-template-columns:1fr; }
@@ -162,11 +183,12 @@
 
 <div class="admin-wrap">
   <div class="admin-header">
-    <img src="assets/img/logo-npa.png" alt="">
-    <div>
+    <img src="assets/img/logo-npa.png" alt="Nigerian Navy Polo Association crest">
+    <div class="titles">
       <span class="mono">Secretariat Only</span>
       <h1>Secretariat Dashboard</h1>
     </div>
+    <img src="assets/img/logo.webp" alt="Nigerian Navy badge">
   </div>
 
   <div class="stat-row" id="statRow" aria-live="polite"></div>
@@ -174,6 +196,7 @@
   <div class="tabs" role="tablist">
     <button class="tab" role="tab" id="tab-register" aria-selected="true" aria-controls="panel-register" data-tab="register">Personnel Register <span class="count" id="cnt-register">–</span></button>
     <button class="tab" role="tab" id="tab-applications" aria-selected="false" aria-controls="panel-applications" data-tab="applications">Applications <span class="count" id="cnt-applications">–</span></button>
+    <button class="tab" role="tab" id="tab-slideshow" aria-selected="false" aria-controls="panel-slideshow" data-tab="slideshow">Slideshow <span class="count" id="cnt-slideshow">–</span></button>
     <button class="tab" role="tab" id="tab-enquiries" aria-selected="false" aria-controls="panel-enquiries" data-tab="enquiries">Enquiries <span class="count" id="cnt-enquiries">–</span></button>
   </div>
 
@@ -213,6 +236,22 @@
   <section class="panel" id="panel-applications" role="tabpanel" aria-labelledby="tab-applications" hidden>
     <p style="color:var(--mist); max-width:700px; line-height:1.6; margin-bottom:18px;">Membership applications submitted through the website, with the internal Premium Slip for each. Naval personnel applications are automatically filed on the Personnel Register — nothing here is sent to an applicant automatically.</p>
     <div id="applicationsWrap"><div class="admin-empty">Loading applications…</div></div>
+  </section>
+
+  <!-- HOMEPAGE SLIDESHOW -->
+  <section class="panel" id="panel-slideshow" role="tabpanel" aria-labelledby="tab-slideshow" hidden>
+    <p class="ss-note">Choose which gallery photos appear in the slideshow on the homepage. Only signed-in secretariat staff can change this — visitors to the site cannot. Tick the photos you want, then press <strong>Save slideshow</strong>. Photos play in the same order as the gallery, and about 4 to 8 works best.</p>
+    <div class="ss-bar">
+      <div>
+        <span class="ss-count"><strong id="ssCount">0</strong> photos selected</span><span class="ss-dirty" id="ssDirty" hidden>Unsaved changes</span>
+        <div class="ss-warn" id="ssWarn" hidden></div>
+      </div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button type="button" class="btn btn-ghost" id="ssReset">Reset to default selection</button>
+        <button type="button" class="btn btn-primary" id="ssSave">Save slideshow</button>
+      </div>
+    </div>
+    <div class="ss-grid" id="ssGrid"></div>
   </section>
 
   <!-- ENQUIRIES -->
@@ -273,6 +312,7 @@
 </div>
 <div class="toast" id="toast" role="status"></div>
 
+<script src="js/gallery-data.js"></script>
 <script>
 (function () {
   'use strict';
@@ -333,7 +373,7 @@
 
   /* ---------- tabs ---------- */
   function showTab(name) {
-    ['register', 'applications', 'enquiries'].forEach(function (t) {
+    ['register', 'applications', 'slideshow', 'enquiries'].forEach(function (t) {
       $('panel-' + t).hidden = (t !== name);
       $('tab-' + t).setAttribute('aria-selected', t === name ? 'true' : 'false');
     });
@@ -646,6 +686,78 @@
     wrap.innerHTML = '<div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Submitted</th><th>Name</th><th>Email</th><th>Subject</th><th>Message</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
   }
 
+  /* ---------- homepage slideshow ---------- */
+  var ssPhotos = (typeof NNPTGallery !== 'undefined') ? NNPTGallery.getAllPhotos() : [];
+  var ssSelected = {};      // id -> true
+  var ssSaved = '';         // signature of what is saved on the server, to spot unsaved changes
+  var ssUsingDefaults = false;
+
+  function ssIds() {
+    return ssPhotos.filter(function (p) { return ssSelected[p.id]; }).map(function (p) { return p.id; });
+  }
+  function ssSignature() { return ssIds().join(','); }
+
+  function renderSlideshow() {
+    var ids = ssIds();
+    $('ssCount').textContent = ids.length;
+    $('cnt-slideshow').textContent = ids.length;
+    var warn = '';
+    if (ids.length === 0) warn = 'Select at least one photo — the slideshow cannot be empty.';
+    else if (ids.length > 12) warn = 'That is a lot of photos for a homepage slideshow — visitors may not wait to see them all.';
+    else if (ssUsingDefaults && ssSignature() === ssSaved) warn = 'Showing the default selection. Nothing has been saved from this dashboard yet.';
+    $('ssWarn').hidden = !warn; $('ssWarn').textContent = warn;
+    $('ssDirty').hidden = (ssSignature() === ssSaved);
+
+    $('ssGrid').innerHTML = ssPhotos.map(function (p) {
+      var on = !!ssSelected[p.id];
+      return '<div class="ss-card' + (on ? ' on' : '') + '" data-id="' + esc(p.id) + '">' +
+        '<button type="button" class="pic" data-act="toggle" aria-label="' + (on ? 'Remove' : 'Add') + ' ' + esc(p.label) + '">' +
+          '<img src="' + esc(p.src) + '" alt="' + esc(p.alt) + '" loading="lazy"><span class="tick">IN SLIDESHOW</span></button>' +
+        '<div class="meta"><div class="lbl">' + esc(p.label) + '</div>' +
+        '<button type="button" class="ss-toggle" data-act="toggle">' + (on ? '&#10003; In slideshow — remove' : '+ Add to slideshow') + '</button></div></div>';
+    }).join('') || '<div class="admin-empty">No gallery photos found.</div>';
+  }
+
+  $('ssGrid').addEventListener('click', function (e) {
+    var btn = e.target.closest('[data-act="toggle"]'); if (!btn) return;
+    var id = btn.closest('.ss-card').getAttribute('data-id');
+    if (ssSelected[id]) delete ssSelected[id]; else ssSelected[id] = true;
+    renderSlideshow();
+  });
+
+  $('ssReset').addEventListener('click', function () {
+    ssSelected = {};
+    ssPhotos.forEach(function (p) { if (p.featured) ssSelected[p.id] = true; });
+    renderSlideshow();
+  });
+
+  $('ssSave').addEventListener('click', function () {
+    var ids = ssIds();
+    if (!ids.length) { toast('Select at least one photo first'); return; }
+    var btn = $('ssSave'); btn.disabled = true; btn.textContent = 'Saving…';
+    api('/api/slideshow', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ids: ids }) })
+      .then(function () { ssSaved = ssSignature(); ssUsingDefaults = false; renderSlideshow(); toast('Slideshow saved — the homepage will show it now'); })
+      .catch(function (err) { toast(err.message || 'Could not save the slideshow'); })
+      .then(function () { btn.disabled = false; btn.textContent = 'Save slideshow'; });
+  });
+
+  api('/api/slideshow').then(function (data) {
+    if (data && Array.isArray(data.ids)) {
+      ssUsingDefaults = false;
+      data.ids.forEach(function (id) { ssSelected[id] = true; });
+    } else {
+      ssUsingDefaults = true;
+      ssPhotos.forEach(function (p) { if (p.featured) ssSelected[p.id] = true; });
+    }
+    ssSaved = ssSignature(); renderSlideshow();
+  }).catch(function () {
+    $('ssGrid').innerHTML = '<div class="admin-empty">Couldn\'t load the slideshow settings. Is the backend server running?</div>';
+  });
+
+  window.addEventListener('beforeunload', function (e) {
+    if (ssPhotos.length && ssSignature() !== ssSaved && ssSaved !== '' ) { e.preventDefault(); e.returnValue = ''; }
+  });
+
   /* ---------- boot ---------- */
   api('/api/members/meta').then(function (meta) {
     rankOrder = meta.officers.concat(meta.ratings);
@@ -664,7 +776,7 @@
   });
 
   var startTab = (location.hash || '').replace('#', '');
-  if (['register', 'applications', 'enquiries'].indexOf(startTab) !== -1) showTab(startTab);
+  if (['register', 'applications', 'slideshow', 'enquiries'].indexOf(startTab) !== -1) showTab(startTab);
 })();
 </script>
 

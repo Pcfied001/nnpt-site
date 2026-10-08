@@ -180,12 +180,30 @@ document.addEventListener('DOMContentLoaded', function () {
 
   /* ---------- Home page featured slideshow ---------- */
   var slideshow = document.getElementById('featuredSlideshow');
+
+  // The secretariat picks the slideshow photos in the admin dashboard and the choice is saved on
+  // the server. If it can't be reached quickly, the defaults in gallery-data.js are used instead.
+  function loadSlideshowIds() {
+    return new Promise(function (resolve) {
+      var done = false;
+      function finish(ids) { if (!done) { done = true; clearTimeout(timer); resolve(ids); } }
+      var timer = setTimeout(function () { finish(null); }, 3000);
+      fetch('/api/slideshow')
+        .then(function (res) { return res.ok ? res.json() : null; })
+        .then(function (data) { finish(data && Array.isArray(data.ids) ? data.ids : null); })
+        .catch(function () { finish(null); });
+    });
+  }
+
   if (slideshow) {
-    // Populate slides from the shared Gallery data (photos marked
-    // "featured" on the Gallery page). Falls back to whatever
+    loadSlideshowIds().then(setupSlideshow);
+  }
+
+  function setupSlideshow(savedIds) {
+    // Populate slides from the shared Gallery data. Falls back to whatever
     // static slides are already in the markup if gallery data isn't loaded.
     if (typeof NNPTGallery !== 'undefined') {
-      var featuredPhotos = NNPTGallery.getFeaturedPhotos();
+      var featuredPhotos = NNPTGallery.getFeaturedPhotos(savedIds);
       if (featuredPhotos.length) {
         var existingDots = document.getElementById('featuredSlideshowDots');
         var existingNav = slideshow.querySelectorAll('.slide-nav');
@@ -328,8 +346,7 @@ document.addEventListener('DOMContentLoaded', function () {
         figure.type = 'button';
         figure.className = 'gallery-card-figure';
         figure.setAttribute('aria-label', 'View ' + photo.label);
-        figure.innerHTML = '<img src="' + photo.src + '" alt="' + photo.alt + '" loading="lazy">' +
-          (photo.featured ? '<span class="gallery-badge">On Slideshow</span>' : '');
+        figure.innerHTML = '<img src="' + photo.src + '" alt="' + photo.alt + '" loading="lazy">';
         figure.addEventListener('click', function () { openGalleryModal(photo); });
 
         var body = document.createElement('div');
@@ -337,17 +354,7 @@ document.addEventListener('DOMContentLoaded', function () {
         var label = document.createElement('p');
         label.className = 'gallery-card-label';
         label.textContent = photo.label;
-        var toggleBtn = document.createElement('button');
-        toggleBtn.type = 'button';
-        toggleBtn.className = 'gallery-toggle-btn' + (photo.featured ? ' is-active' : '');
-        toggleBtn.textContent = photo.featured ? '− Remove from Slideshow' : '+ Add to Slideshow';
-        toggleBtn.addEventListener('click', function () {
-          NNPTGallery.toggleFeatured(photo.id);
-          renderGallery();
-        });
-
         body.appendChild(label);
-        body.appendChild(toggleBtn);
         card.appendChild(figure);
         card.appendChild(body);
         galleryGrid.appendChild(card);

@@ -12,6 +12,7 @@ const galleryRouter = require('./routes/gallery');
 const applicationsRouter = require('./routes/applications');
 const enquiriesRouter = require('./routes/enquiries');
 const membersRouter = require('./routes/members');
+const slideshowRouter = require('./routes/slideshow');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -34,6 +35,7 @@ app.use('/api/gallery', galleryRouter);
 app.use('/api/applications', applicationsRouter);
 app.use('/api/enquiries', enquiriesRouter);
 app.use('/api/members', membersRouter);
+app.use('/api/slideshow', slideshowRouter);
 
 // old-style /page.html links redirect to the clean /page version (admin.html stays as-is, handled above)
 app.get('/:page.html', (req, res, next) => {

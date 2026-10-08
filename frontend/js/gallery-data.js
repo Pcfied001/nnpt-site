@@ -1,16 +1,14 @@
 /* ============================================================
    Nigerian Navy Polo Association — shared photo gallery
-   Single source of truth for photos. The Gallery page lets you
-   pick which of these appear in the homepage featured slideshow;
-   the choice is remembered in this browser (localStorage) until
-   the site is wired up to the backend /api/gallery endpoint.
+   Single source of truth for photos. Which photos appear in the
+   homepage slideshow is chosen by the secretariat in the admin
+   dashboard (Slideshow tab). defaultFeatured below is only the
+   starting selection, used until a choice has been saved there.
    ============================================================ */
-
-var NNPT_GALLERY_STORAGE_KEY = 'nnpt-gallery-featured';
 
 // The photo library. Add a new photo by adding an entry here (and
 // dropping the image into assets/img/) — it will show up on the
-// Gallery page automatically, ready to be added to the slideshow.
+// Gallery page automatically, set defaultFeatured: true to put it in the slideshow.
 var NNPT_GALLERY_PHOTOS = [
   {
     id: 'gallery-2',
@@ -248,61 +246,79 @@ var NNPT_GALLERY_PHOTOS = [
     label: 'CNS Cup Finals 2023',
     caption: 'Players on horseback line up before the CNS Cup Finals, 18 February 2023.',
     defaultFeatured: false
+  },
+  {
+    id: 'gallery-30',
+    src: 'assets/img/gallery-30.jpg',
+    alt: 'A Navy Team player on a chestnut horse with a navy saddle cloth, mallet in hand, at the edge of the polo field',
+    label: 'On the Field',
+    caption: 'A Navy Team player, number 2, rides out onto the polo field with his mallet at the ready.',
+    defaultFeatured: false
+  },
+  {
+    id: 'gallery-31',
+    src: 'assets/img/gallery-31.jpg',
+    alt: 'A smiling rider in a navy blue jersey reaching out with his mallet while other riders close in during a polo match',
+    label: 'In Play',
+    caption: 'A smiling player in navy blue reaches with his mallet as riders close in during a lively passage of play.',
+    defaultFeatured: false
+  },
+  {
+    id: 'gallery-32',
+    src: 'assets/img/gallery-32.jpg',
+    alt: 'Two teammates in grey jerseys, numbers 1 and 2, sitting side by side on chestnut horses with polo mallets',
+    label: 'Teammates',
+    caption: 'Two teammates in grey jerseys, numbers 1 and 2, sit side by side on horseback before play.',
+    defaultFeatured: false
+  },
+  {
+    id: 'gallery-33',
+    src: 'assets/img/gallery-33.jpg',
+    alt: 'A polo player in a grey team jersey and sunglasses sitting on a chestnut horse with a white blaze',
+    label: 'Ready to Ride',
+    caption: 'A player in a grey team jersey waits on a chestnut horse, reins and mallet in hand.',
+    defaultFeatured: false
+  },
+  {
+    id: 'gallery-34',
+    src: 'assets/img/gallery-34.jpg',
+    alt: 'Polo players in red and white jerseys on horseback competing for the ball in the middle of a match',
+    label: 'Contest for the Ball',
+    caption: 'Riders in red and white jerseys crowd in on the ball during a close-fought moment of play.',
+    defaultFeatured: false
+  },
+  {
+    id: 'gallery-35',
+    src: 'assets/img/gallery-35.jpg',
+    alt: 'Close-up portrait of a polo player in a red number 1 jersey, helmet and sunglasses',
+    label: 'Player Portrait',
+    caption: 'A close-up of a player in a red number 1 jersey, helmet and sunglasses.',
+    defaultFeatured: false
   }
 ];
 
 var NNPTGallery = (function () {
 
-  function readOverrides() {
-    try {
-      var raw = window.localStorage.getItem(NNPT_GALLERY_STORAGE_KEY);
-      return raw ? JSON.parse(raw) : {};
-    } catch (err) {
-      return {};
-    }
-  }
-
-  function writeOverrides(overrides) {
-    try {
-      window.localStorage.setItem(NNPT_GALLERY_STORAGE_KEY, JSON.stringify(overrides));
-    } catch (err) { /* localStorage unavailable — selection just won't persist */ }
-  }
-
-  function isFeatured(photo, overrides) {
-    return Object.prototype.hasOwnProperty.call(overrides, photo.id)
-      ? !!overrides[photo.id]
-      : !!photo.defaultFeatured;
-  }
-
   function getAllPhotos() {
-    var overrides = readOverrides();
     return NNPT_GALLERY_PHOTOS.map(function (photo) {
-      return Object.assign({}, photo, { featured: isFeatured(photo, overrides) });
+      return Object.assign({}, photo, { featured: !!photo.defaultFeatured });
     });
   }
 
-  function getFeaturedPhotos() {
-    return getAllPhotos().filter(function (photo) { return photo.featured; });
-  }
-
-  function setFeatured(id, featured) {
-    var overrides = readOverrides();
-    overrides[id] = !!featured;
-    writeOverrides(overrides);
-  }
-
-  function toggleFeatured(id) {
-    var photo = getAllPhotos().filter(function (p) { return p.id === id; })[0];
-    var next = photo ? !photo.featured : true;
-    setFeatured(id, next);
-    return next;
+  // `ids` is the list saved by the secretariat in the admin dashboard. When there isn't one
+  // (nothing chosen yet, or the server can't be reached) the defaults above are used.
+  function getFeaturedPhotos(ids) {
+    var all = getAllPhotos();
+    if (Array.isArray(ids)) {
+      var picked = all.filter(function (photo) { return ids.indexOf(photo.id) !== -1; });
+      if (picked.length) return picked;
+    }
+    return all.filter(function (photo) { return photo.featured; });
   }
 
   return {
     getAllPhotos: getAllPhotos,
-    getFeaturedPhotos: getFeaturedPhotos,
-    setFeatured: setFeatured,
-    toggleFeatured: toggleFeatured
+    getFeaturedPhotos: getFeaturedPhotos
   };
 
 })();
