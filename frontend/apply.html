@@ -26,7 +26,7 @@
 </div>
 <script>
 (function () {
-  var alreadyVisited = sessionStorage.getItem('nnptVisited') === '1';
+  var alreadyVisited = sessionStorage.getItem('nnpaVisited') === '1';
   var MIN_MS = alreadyVisited ? 0 : 1600;
   var start = Date.now();
   function hidePreloader() {
@@ -38,7 +38,7 @@
     }, alreadyVisited ? 0 : 550);
   }
   function whenReady() {
-    sessionStorage.setItem('nnptVisited', '1');
+    sessionStorage.setItem('nnpaVisited', '1');
     var remaining = Math.max(MIN_MS - (Date.now() - start), 0);
     setTimeout(hidePreloader, remaining);
   }
@@ -215,13 +215,13 @@
             </span>
             <div>
               <h4>Civilian &amp; Associate Membership</h4>
-              <p>For friends of the Team who are not serving or retired Naval personnel.</p>
+              <p>For friends of the Association who are not serving or retired Naval personnel.</p>
             </div>
           </div>
           <div class="detail-block-grid">
             <div class="field"><label for="aOccupation">Occupation</label><input id="aOccupation" type="text"></div>
             <div class="field"><label for="aOrg">Organisation / Employer</label><input id="aOrg" type="text"></div>
-            <div class="field"><label for="aSponsor">Proposed By (Team Member)</label><input id="aSponsor" type="text" placeholder="Name of member sponsoring your application"></div>
+            <div class="field"><label for="aSponsor">Proposed By (Association Member)</label><input id="aSponsor" type="text" placeholder="Name of member sponsoring your application"></div>
             <p class="civic-note">Civilian and associate applications are welcomed on the recommendation of an existing member. A member of the secretariat will reach out to confirm your sponsor before your application is placed before the committee.</p>
           </div>
         </div>
@@ -269,7 +269,7 @@
       </div>
       <div class="footer-links">
         <div>
-          <h5>Team</h5>
+          <h5>Association</h5>
           <ul>
             <li><a href="index.html#about">About</a></li>
             <li><a href="index.html#history">Heritage</a></li>

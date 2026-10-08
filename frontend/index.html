@@ -26,7 +26,7 @@
 </div>
 <script>
 (function () {
-  var alreadyVisited = sessionStorage.getItem('nnptVisited') === '1';
+  var alreadyVisited = sessionStorage.getItem('nnpaVisited') === '1';
   var MIN_MS = alreadyVisited ? 0 : 1600;
   var start = Date.now();
   function hidePreloader() {
@@ -38,7 +38,7 @@
     }, alreadyVisited ? 0 : 550);
   }
   function whenReady() {
-    sessionStorage.setItem('nnptVisited', '1');
+    sessionStorage.setItem('nnpaVisited', '1');
     var remaining = Math.max(MIN_MS - (Date.now() - start), 0);
     setTimeout(hidePreloader, remaining);
   }
@@ -109,7 +109,7 @@
       <img width="1400" height="932" src="assets/img/gallery-2.jpeg" alt="Officers and members of the Nigerian Navy Polo Association">
       <div class="featured-caption">
         <span class="mono">Nigerian Navy Polo Association</span>
-        <p>Officers and members of the Team at the Naval Headquarters.</p>
+        <p>Officers and members of the Association at the Naval Headquarters.</p>
       </div>
     </div>
     <div class="f-slide">
@@ -153,7 +153,7 @@
         <h1>Discipline of the <em>Fleet</em>,<br>Spirit of the <em>Field</em>.</h1>
         <p class="lede">The Nigerian Navy Polo Association brings together serving officers, veterans and members of the polo community under one mandate: sportsmanship, camaraderie, and the naval tradition of excellence — on horseback.</p>
         <div class="hero-ctas">
-          <a href="/membership" class="btn-primary">Join the Team</a>
+          <a href="/membership" class="btn-primary">Join the Association</a>
           <a href="#fixtures" class="btn-ghost">View Fixtures</a>
         </div>
         <div class="stat-line">
@@ -178,7 +178,7 @@
     <div class="wrap">
       <div class="about-grid">
         <div>
-          <span class="mono about-eyebrow">About the Team</span>
+          <span class="mono about-eyebrow">About the Association</span>
           <h2 class="about-title">A tradition carried from the wardroom to the field</h2>
           <p class="lead">The Nigerian Navy Polo Association was formed to preserve and grow the sport of polo within the Naval community, extending the same values of precision, teamwork and command that define service at sea.</p>
           <p>Membership is open to serving and retired naval officers, their families, and civilian polo enthusiasts who share our commitment to the sport's traditions. We organise regular chukkas, coach emerging players, and represent the Navy at national and international tournaments.</p>
@@ -207,7 +207,7 @@
       <div class="section-head">
         <span class="mono">Heritage</span>
         <h2>Milestones on the field</h2>
-        <p>From its founding chukka to national recognition — the story of the Team is written year by year.</p>
+        <p>From its founding chukka to national recognition — the story of the Association is written year by year.</p>
       </div>
       <div class="timeline">
         <div class="t-item">
@@ -315,7 +315,7 @@
       <div class="section-head">
         <span class="mono">Leadership</span>
         <h2>Patron, Pioneer, Chairman &amp; Captain</h2>
-        <p>The individuals who provide direction and leadership for the Team.</p>
+        <p>The individuals who provide direction and leadership for the Association.</p>
       </div>
       <div class="leadership-duo">
         <div class="patron-feature">
@@ -341,7 +341,7 @@
             <p class="patron-honours mono">CFR &middot; psc &middot; AM &middot; GSS &middot; ensp(RSA) &middot; MTM &middot; MNIM &middot; MUSNI &middot; FCIS &middot; FIIPS &middot; FCAI</p>
             <p class="patron-title">Pioneer President</p>
             <div class="patron-rule"></div>
-            <p class="patron-note">Vice Admiral Awwal Zubairu Gambo established the Nigerian Navy Polo Association in 2021, laying the foundation for the Team's tradition of discipline and excellence on the field of play.</p>
+            <p class="patron-note">Vice Admiral Awwal Zubairu Gambo established the Nigerian Navy Polo Association in 2021, laying the foundation for the Association's tradition of discipline and excellence on the field of play.</p>
           </div>
         </div>
         <div class="patron-feature">
@@ -384,7 +384,7 @@
       </div>
       <div class="footer-links">
         <div>
-          <h5>Team</h5>
+          <h5>Association</h5>
           <ul>
             <li><a href="#about">About</a></li>
             <li><a href="#history">Heritage</a></li>

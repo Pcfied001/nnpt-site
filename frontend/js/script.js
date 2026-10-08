@@ -412,15 +412,31 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  // photos the secretariat deleted from the gallery (3 second limit, same as the slideshow choice)
+  function loadHiddenIds() {
+    return new Promise(function (resolve) {
+      var done = false;
+      function finish(ids) { if (!done) { done = true; clearTimeout(timer); resolve(ids); } }
+      var timer = setTimeout(function () { finish(null); }, 3000);
+      fetch('/api/gallery-hidden')
+        .then(function (res) { return res.ok ? res.json() : null; })
+        .then(function (data) { finish(data && Array.isArray(data.hidden) ? data.hidden : null); })
+        .catch(function () { finish(null); });
+    });
+  }
+
   if (slideshow) {
-    loadSlideshowIds().then(setupSlideshow);
+    Promise.all([loadSlideshowIds(), loadHiddenIds()]).then(function (results) {
+      if (results[1] && typeof NNPAGallery !== 'undefined') NNPAGallery.setHidden(results[1]);
+      setupSlideshow(results[0]);
+    });
   }
 
   function setupSlideshow(savedIds) {
     // Populate slides from the shared Gallery data. Falls back to whatever
     // static slides are already in the markup if gallery data isn't loaded.
-    if (typeof NNPTGallery !== 'undefined') {
-      var featuredPhotos = NNPTGallery.getFeaturedPhotos(savedIds);
+    if (typeof NNPAGallery !== 'undefined') {
+      var featuredPhotos = NNPAGallery.getFeaturedPhotos(savedIds);
       if (featuredPhotos.length) {
         var existingDots = document.getElementById('featuredSlideshowDots');
         var existingNav = slideshow.querySelectorAll('.slide-nav');
@@ -490,13 +506,13 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   /* ---------- Fixtures table (home page + Fixtures page) ----------
-     Both pages render from the single NNPT_FIXTURES source in
+     Both pages render from the single NNPA_FIXTURES source in
      fixtures-data.js — update a fixture there and it appears on
      both places at once.
   */
   var fixturesBody = document.getElementById('fixturesTableBody');
-  if (fixturesBody && typeof NNPTFixtures !== 'undefined') {
-    var fixtures = NNPTFixtures.getAll();
+  if (fixturesBody && typeof NNPAFixtures !== 'undefined') {
+    var fixtures = NNPAFixtures.getAll();
     fixturesBody.innerHTML = '';
     fixtures.forEach(function (fx) {
       var tr = document.createElement('tr');
@@ -523,7 +539,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   /* ---------- Gallery page ---------- */
   var galleryGrid = document.getElementById('galleryGrid');
-  if (galleryGrid && typeof NNPTGallery !== 'undefined') {
+  if (galleryGrid && typeof NNPAGallery !== 'undefined') {
     var galleryModalOverlay = document.getElementById('galleryModalOverlay');
     var galleryModalImg = document.getElementById('galleryModalImg');
     var galleryModalLabel = document.getElementById('galleryModalLabel');
@@ -553,7 +569,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     function renderGallery() {
-      var photos = NNPTGallery.getAllPhotos();
+      var photos = NNPAGallery.getAllPhotos();
       galleryGrid.innerHTML = '';
       photos.forEach(function (photo) {
         var card = document.createElement('div');
@@ -578,7 +594,10 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     }
 
-    renderGallery();
+    loadHiddenIds().then(function (hidden) {
+      if (hidden) NNPAGallery.setHidden(hidden);
+      renderGallery();
+    });
   }
 
   /* ---------- Fallen Heroes data ----------
@@ -600,28 +619,28 @@ document.addEventListener('DOMContentLoaded', function () {
       rank: "Sub-Lieutenant",
       dob: "Placeholder — DD/MM/YYYY",
       dod: "Placeholder — DD/MM/YYYY",
-      bio: "Biodata placeholder. Add this officer's service history, polo achievements, and a short tribute here once details are confirmed by the Team."
+      bio: "Biodata placeholder. Add this officer's service history, polo achievements, and a short tribute here once details are confirmed by the Association."
     },
     "3": {
       name: "Name Placeholder III",
       rank: "Petty Officer",
       dob: "Placeholder — DD/MM/YYYY",
       dod: "Placeholder — DD/MM/YYYY",
-      bio: "Biodata placeholder. Add this officer's service history, polo achievements, and a short tribute here once details are confirmed by the Team."
+      bio: "Biodata placeholder. Add this officer's service history, polo achievements, and a short tribute here once details are confirmed by the Association."
     },
     "4": {
       name: "Name Placeholder IV",
       rank: "Lieutenant",
       dob: "Placeholder — DD/MM/YYYY",
       dod: "Placeholder — DD/MM/YYYY",
-      bio: "Biodata placeholder. Add this officer's service history, polo achievements, and a short tribute here once details are confirmed by the Team."
+      bio: "Biodata placeholder. Add this officer's service history, polo achievements, and a short tribute here once details are confirmed by the Association."
     },
     "5": {
       name: "Name Placeholder V",
       rank: "Chief Petty Officer",
       dob: "Placeholder — DD/MM/YYYY",
       dod: "Placeholder — DD/MM/YYYY",
-      bio: "Biodata placeholder. Add this officer's service history, polo achievements, and a short tribute here once details are confirmed by the Team."
+      bio: "Biodata placeholder. Add this officer's service history, polo achievements, and a short tribute here once details are confirmed by the Association."
     }
   };
 
@@ -701,12 +720,12 @@ document.addEventListener('DOMContentLoaded', function () {
     "1": {
       name: "Twilight Cup",
       year: "Year Placeholder",
-      story: "Won by the Nigerian Navy Polo Association. Full match details — the host tournament, the opponents, and the standout moments — will be added once confirmed by the Team."
+      story: "Won by the Nigerian Navy Polo Association. Full match details — the host tournament, the opponents, and the standout moments — will be added once confirmed by the Association."
     },
     "2": {
       name: "Juma Cup",
       year: "Year Placeholder",
-      story: "Won by the Nigerian Navy Polo Association. Full match details — the host tournament, the opponents, and the standout moments — will be added once confirmed by the Team."
+      story: "Won by the Nigerian Navy Polo Association. Full match details — the host tournament, the opponents, and the standout moments — will be added once confirmed by the Association."
     },
     "3": {
       name: "TY Danjuma Cup",
@@ -721,7 +740,7 @@ document.addEventListener('DOMContentLoaded', function () {
     "5": {
       name: "Trophy Name Placeholder V",
       year: "Year Placeholder",
-      story: "Story placeholder. Add the details of how this trophy was won — the tournament, the opponents, and the standout moments — once confirmed by the Team."
+      story: "Story placeholder. Add the details of how this trophy was won — the tournament, the opponents, and the standout moments — once confirmed by the Association."
     }
   };
 

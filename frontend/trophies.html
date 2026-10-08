@@ -26,7 +26,7 @@
 </div>
 <script>
 (function () {
-  var alreadyVisited = sessionStorage.getItem('nnptVisited') === '1';
+  var alreadyVisited = sessionStorage.getItem('nnpaVisited') === '1';
   var MIN_MS = alreadyVisited ? 0 : 1600;
   var start = Date.now();
   function hidePreloader() {
@@ -38,7 +38,7 @@
     }, alreadyVisited ? 0 : 550);
   }
   function whenReady() {
-    sessionStorage.setItem('nnptVisited', '1');
+    sessionStorage.setItem('nnpaVisited', '1');
     var remaining = Math.max(MIN_MS - (Date.now() - start), 0);
     setTimeout(hidePreloader, remaining);
   }
@@ -106,7 +106,7 @@
     <div class="wrap">
       <span class="mono">Honours Board</span>
       <h1>Trophies &amp; Titles</h1>
-      <p>A record of silverware won by the Team over the years. Details are being compiled — placeholders below will be updated with each trophy's name, the year it was won, and the story behind the win.</p>
+      <p>A record of silverware won by the Association over the years. Details are being compiled — placeholders below will be updated with each trophy's name, the year it was won, and the story behind the win.</p>
     </div>
   </section>
 
@@ -199,7 +199,7 @@
       </div>
       <div class="footer-links">
         <div>
-          <h5>Team</h5>
+          <h5>Association</h5>
           <ul>
             <li><a href="index.html#about">About</a></li>
             <li><a href="index.html#history">Heritage</a></li>

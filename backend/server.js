@@ -13,6 +13,7 @@ const applicationsRouter = require('./routes/applications');
 const enquiriesRouter = require('./routes/enquiries');
 const membersRouter = require('./routes/members');
 const slideshowRouter = require('./routes/slideshow');
+const galleryHiddenRouter = require('./routes/galleryHidden');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -37,6 +38,7 @@ app.use('/api/applications', applicationsRouter);
 app.use('/api/enquiries', enquiriesRouter);
 app.use('/api/members', membersRouter);
 app.use('/api/slideshow', slideshowRouter);
+app.use('/api/gallery-hidden', galleryHiddenRouter);
 
 // old-style /page.html links redirect to the clean /page version (admin.html stays as-is, handled above)
 app.get('/:page.html', (req, res, next) => {
@@ -60,10 +62,10 @@ app.use((err, req, res, next) => {
 connect()
   .then(() => {
     app.listen(PORT, () => {
-      console.log(`NNPT server running at http://localhost:${PORT}`);
+      console.log(`NNPA server running at http://localhost:${PORT}`);
     });
   })
   .catch((err) => {
-    console.error('\n[NNPT] Could not start: ' + err.message + '\n');
+    console.error('\n[NNPA] Could not start: ' + err.message + '\n');
     process.exit(1);
   });

@@ -9,13 +9,13 @@
 // The photo library. Add a new photo by adding an entry here (and
 // dropping the image into assets/img/) — it will show up on the
 // Gallery page automatically, set defaultFeatured: true to put it in the slideshow.
-var NNPT_GALLERY_PHOTOS = [
+var NNPA_GALLERY_PHOTOS = [
   {
     id: 'gallery-2',
     src: 'assets/img/gallery-2.jpeg',
     alt: 'Officers and members of the Nigerian Navy Polo Association',
     label: 'Nigerian Navy Polo Association',
-    caption: 'Officers and members of the Team at the Naval Headquarters.',
+    caption: 'Officers and members of the Association at the Naval Headquarters.',
     defaultFeatured: true
   },
   {
@@ -250,9 +250,9 @@ var NNPT_GALLERY_PHOTOS = [
   {
     id: 'gallery-30',
     src: 'assets/img/gallery-30.jpg',
-    alt: 'A Navy Team player on a chestnut horse with a navy saddle cloth, mallet in hand, at the edge of the polo field',
+    alt: 'A Navy player on a chestnut horse with a navy saddle cloth, mallet in hand, at the edge of the polo field',
     label: 'On the Field',
-    caption: 'A Navy Team player, number 2, rides out onto the polo field with his mallet at the ready.',
+    caption: 'A Navy player, number 2, rides out onto the polo field with his mallet at the ready.',
     defaultFeatured: false
   },
   {
@@ -297,12 +297,23 @@ var NNPT_GALLERY_PHOTOS = [
   }
 ];
 
-var NNPTGallery = (function () {
+var NNPAGallery = (function () {
 
-  function getAllPhotos() {
-    return NNPT_GALLERY_PHOTOS.map(function (photo) {
-      return Object.assign({}, photo, { featured: !!photo.defaultFeatured });
-    });
+  // ids the secretariat has deleted from the gallery in the admin dashboard (loaded from the server)
+  var hiddenIds = [];
+
+  function setHidden(ids) {
+    hiddenIds = Array.isArray(ids) ? ids.slice() : [];
+  }
+
+  // Deleted photos are left out unless includeHidden is true (the admin Gallery tab needs them to offer Restore).
+  function getAllPhotos(includeHidden) {
+    return NNPA_GALLERY_PHOTOS.map(function (photo) {
+      return Object.assign({}, photo, {
+        featured: !!photo.defaultFeatured,
+        hidden: hiddenIds.indexOf(photo.id) !== -1
+      });
+    }).filter(function (photo) { return includeHidden || !photo.hidden; });
   }
 
   // `ids` is the list saved by the secretariat in the admin dashboard. When there isn't one
@@ -317,6 +328,7 @@ var NNPTGallery = (function () {
   }
 
   return {
+    setHidden: setHidden,
     getAllPhotos: getAllPhotos,
     getFeaturedPhotos: getFeaturedPhotos
   };

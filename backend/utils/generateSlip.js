@@ -10,7 +10,7 @@ const MIST = '#5B6B7A';
 
 
 function refNumber(application) {
-  var prefix = application.applicantType === 'civilian' ? 'NNPT/CIV' : 'NNPT/NP';
+  var prefix = application.applicantType === 'civilian' ? 'NNPA/CIV' : 'NNPA/NP';
   var padded = String(application.id).padStart(5, '0');
   var year = new Date(application.submittedAt).getFullYear();
   return prefix + '/' + year + '/' + padded;

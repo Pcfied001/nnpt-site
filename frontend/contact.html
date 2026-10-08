@@ -26,7 +26,7 @@
 </div>
 <script>
 (function () {
-  var alreadyVisited = sessionStorage.getItem('nnptVisited') === '1';
+  var alreadyVisited = sessionStorage.getItem('nnpaVisited') === '1';
   var MIN_MS = alreadyVisited ? 0 : 1600;
   var start = Date.now();
   function hidePreloader() {
@@ -38,7 +38,7 @@
     }, alreadyVisited ? 0 : 550);
   }
   function whenReady() {
-    sessionStorage.setItem('nnptVisited', '1');
+    sessionStorage.setItem('nnpaVisited', '1');
     var remaining = Math.max(MIN_MS - (Date.now() - start), 0);
     setTimeout(hidePreloader, remaining);
   }
@@ -106,8 +106,8 @@
   <section class="page-banner">
     <div class="wrap">
       <span class="mono">Get in Touch</span>
-      <h1>Enquire with the Team</h1>
-      <p>Reach out to the Team's secretariat for membership applications, tournament enquiries, or partnership proposals.</p>
+      <h1>Enquire with the Association</h1>
+      <p>Reach out to the Association's secretariat for membership applications, tournament enquiries, or partnership proposals.</p>
     </div>
   </section>
 
@@ -146,7 +146,7 @@
       </div>
       <div class="footer-links">
         <div>
-          <h5>Team</h5>
+          <h5>Association</h5>
           <ul>
             <li><a href="index.html#about">About</a></li>
             <li><a href="index.html#history">Heritage</a></li>

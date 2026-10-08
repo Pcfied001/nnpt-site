@@ -13,7 +13,7 @@ function isConfigured() {
 function warnIfNotConfigured() {
   if (warned || isConfigured()) return;
   console.warn(
-    '\n[NNPT] Brevo not configured, skipping confirmation emails. ' +
+    '\n[NNPA] Brevo not configured, skipping confirmation emails. ' +
     'Add BREVO_API_KEY/BREVO_FROM_EMAIL to .env if you want this on.\n'
   );
   warned = true;
@@ -50,7 +50,7 @@ async function sendMail({ to, subject, html, text }) {
 
     return { sent: true };
   } catch (err) {
-    console.error('[NNPT] Failed to send confirmation email to', to, '—', err.message);
+    console.error('[NNPA] Failed to send confirmation email to', to, '—', err.message);
     return { sent: false, reason: err.message };
   }
 }

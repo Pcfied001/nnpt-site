@@ -1,5 +1,5 @@
 {
-  "name": "nnpt-backend",
+  "name": "nnpa-backend",
   "version": "1.0.0",
   "description": "Backend API for the Nigerian Navy Polo Association website",
   "main": "server.js",

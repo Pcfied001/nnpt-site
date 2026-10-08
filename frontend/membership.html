@@ -26,7 +26,7 @@
 </div>
 <script>
 (function () {
-  var alreadyVisited = sessionStorage.getItem('nnptVisited') === '1';
+  var alreadyVisited = sessionStorage.getItem('nnpaVisited') === '1';
   var MIN_MS = alreadyVisited ? 0 : 1600;
   var start = Date.now();
   function hidePreloader() {
@@ -38,7 +38,7 @@
     }, alreadyVisited ? 0 : 550);
   }
   function whenReady() {
-    sessionStorage.setItem('nnptVisited', '1');
+    sessionStorage.setItem('nnpaVisited', '1');
     var remaining = Math.max(MIN_MS - (Date.now() - start), 0);
     setTimeout(hidePreloader, remaining);
   }
@@ -107,7 +107,7 @@
     <div class="wrap">
       <span class="mono">Membership</span>
       <h1>Find your place on the field</h1>
-      <p>Three ways to join the Team, whether you're a serving officer, a veteran, or a civilian polo enthusiast.</p>
+      <p>Three ways to join the Association, whether you're a serving officer, a veteran, or a civilian polo enthusiast.</p>
     </div>
   </section>
 
@@ -122,7 +122,7 @@
           <ul>
             <li>Access to club chukkas</li>
             <li>Coaching clinics</li>
-            <li>Team newsletter</li>
+            <li>Association newsletter</li>
             <li>Guest access to club house</li>
           </ul>
           <a href="/contact" class="btn-ghost" style="text-align:center;">Enquire</a>
@@ -165,7 +165,7 @@
       </div>
       <div class="footer-links">
         <div>
-          <h5>Team</h5>
+          <h5>Association</h5>
           <ul>
             <li><a href="index.html#about">About</a></li>
             <li><a href="index.html#history">Heritage</a></li>

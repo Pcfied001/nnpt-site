@@ -9,7 +9,7 @@ function warnIfUsingDefaults() {
   if (warned) return;
   if (!process.env.ADMIN_USER || !process.env.ADMIN_PASS) {
     console.warn(
-      '\n[NNPT] WARNING: using default admin login (secretariat / change-me-before-launch). ' +
+      '\n[NNPA] WARNING: using default admin login (secretariat / change-me-before-launch). ' +
       'Set ADMIN_USER and ADMIN_PASS in .env before real applicants use this site.\n'
     );
     warned = true;
@@ -22,7 +22,7 @@ warnIfUsingDefaults();
 const secretariatAuth = basicAuth({
   users: { [ADMIN_USER]: ADMIN_PASS },
   challenge: true,
-  realm: 'NNPT Secretariat'
+  realm: 'NNPA Secretariat'
 });
 
 module.exports = secretariatAuth;

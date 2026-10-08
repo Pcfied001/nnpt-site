@@ -173,6 +173,12 @@
   .ss-card .meta{ padding:10px 12px 12px; display:flex; flex-direction:column; gap:8px; flex:1; }
   .ss-card .lbl{ color:var(--parchment); font-size:0.82rem; line-height:1.35; min-height:2.2em; }
   .ss-toggle{ padding:7px 10px; background:transparent; color:var(--gold); border:1px solid var(--gold); cursor:pointer; font-family:'JetBrains Mono',monospace; font-size:0.68rem; letter-spacing:0.04em; text-transform:uppercase; }
+  .ss-delete{ padding:7px 10px; background:transparent; color:#E0A29B; border:1px solid #9A4A42; cursor:pointer; font-family:'JetBrains Mono',monospace; font-size:0.68rem; letter-spacing:0.04em; text-transform:uppercase; }
+  .ss-delete:hover{ background:rgba(154,74,66,0.2); }
+  .ss-delete:disabled, .ss-toggle:disabled{ opacity:0.6; cursor:default; }
+  .ss-card.removed{ opacity:0.55; border-style:dashed; }
+  .ss-card.removed .pic{ cursor:default; filter:grayscale(1); }
+  .gl-sub{ margin:28px 0 12px; color:var(--parchment); font-family:'JetBrains Mono',monospace; font-size:0.78rem; letter-spacing:0.08em; text-transform:uppercase; }
   .ss-toggle:hover{ background:rgba(198,161,91,0.12); }
   .ss-card.on .ss-toggle{ background:var(--gold); color:var(--navy-deep); }
   .admin-section h2{ color:var(--parchment); font-size:1.4rem; margin-bottom:16px; }
@@ -201,6 +207,7 @@
     <button class="tab" role="tab" id="tab-register" aria-selected="true" aria-controls="panel-register" data-tab="register">Personnel Register <span class="count" id="cnt-register">–</span></button>
     <button class="tab" role="tab" id="tab-applications" aria-selected="false" aria-controls="panel-applications" data-tab="applications">Applications <span class="count" id="cnt-applications">–</span></button>
     <button class="tab" role="tab" id="tab-slideshow" aria-selected="false" aria-controls="panel-slideshow" data-tab="slideshow">Slideshow <span class="count" id="cnt-slideshow">–</span></button>
+    <button class="tab" role="tab" id="tab-gallery" aria-selected="false" aria-controls="panel-gallery" data-tab="gallery">Gallery <span class="count" id="cnt-gallery">–</span></button>
     <button class="tab" role="tab" id="tab-enquiries" aria-selected="false" aria-controls="panel-enquiries" data-tab="enquiries">Enquiries <span class="count" id="cnt-enquiries">–</span></button>
   </div>
 
@@ -256,6 +263,14 @@
       </div>
     </div>
     <div class="ss-grid" id="ssGrid"></div>
+  </section>
+
+  <!-- GALLERY -->
+  <section class="panel" id="panel-gallery" role="tabpanel" aria-labelledby="tab-gallery" hidden>
+    <p class="ss-note">These are the photos on the Gallery page. <strong>Delete</strong> takes a photo off the Gallery page and the homepage slideshow straight away. The image file itself stays in the website&rsquo;s files, so a deleted photo can always be brought back from <strong>Deleted photos</strong> below.</p>
+    <div class="ss-grid" id="glGrid"></div>
+    <div class="gl-sub" id="glRemovedTitle" hidden>Deleted photos</div>
+    <div class="ss-grid" id="glRemovedGrid"></div>
   </section>
 
   <!-- ENQUIRIES -->
@@ -377,7 +392,7 @@
 
   /* ---------- tabs ---------- */
   function showTab(name) {
-    ['register', 'applications', 'slideshow', 'enquiries'].forEach(function (t) {
+    ['register', 'applications', 'slideshow', 'gallery', 'enquiries'].forEach(function (t) {
       $('panel-' + t).hidden = (t !== name);
       $('tab-' + t).setAttribute('aria-selected', t === name ? 'true' : 'false');
     });
@@ -569,6 +584,7 @@
     } else if (m && (m.status === 'suspended' || m.status === 'archived')) {
       qa = '<button type="button" class="btn btn-ghost" data-quick="active">Reinstate</button>';
     }
+    if (m) qa += '<button type="button" class="btn btn-danger" data-delete="1">Delete record</button>';
     $('quickActions').innerHTML = qa;
 
     $('mOverlay').classList.add('open');
@@ -614,6 +630,21 @@
 
   $('mForm').addEventListener('submit', function (e) { e.preventDefault(); saveMember(); });
   $('quickActions').addEventListener('click', function (e) {
+    var del = e.target.closest('[data-delete]');
+    if (del) {
+      var target = members.find(function (x) { return x.id === editingId; });
+      if (!target) return;
+      if (!confirm('Permanently delete ' + target.fullName + ' (' + target.memberNo + ') from the personnel register?\n\nTheir details, rank history and activity log will be erased and cannot be recovered.\n\nIf you only want to retire them, press Cancel and set the status to Archived instead.')) return;
+      del.disabled = true;
+      api('/api/members/' + target.id, { method: 'DELETE' })
+        .then(function () {
+          members = members.filter(function (x) { return x.id !== target.id; });
+          renderStats(); renderRankFilter(); renderRegister(); closeModal();
+          toast('Deleted from the register');
+        })
+        .catch(function (err) { del.disabled = false; showError(err.message || 'Could not delete this record'); });
+      return;
+    }
     var b = e.target.closest('[data-quick]'); if (!b) return;
     var s = b.getAttribute('data-quick');
     if (s !== 'active' && !confirm('Are you sure you want to ' + (s === 'archived' ? 'decline / archive this record' : 'suspend this member') + '? The record is kept on the register.')) return;
@@ -708,7 +739,7 @@
   }
 
   /* ---------- homepage slideshow ---------- */
-  var ssPhotos = (typeof NNPTGallery !== 'undefined') ? NNPTGallery.getAllPhotos() : [];
+  var ssPhotos = (typeof NNPAGallery !== 'undefined') ? NNPAGallery.getAllPhotos() : [];
   var ssSelected = {};      // id -> true
   var ssSaved = '';         // signature of what is saved on the server, to spot unsaved changes
   var ssUsingDefaults = false;
@@ -762,7 +793,68 @@
       .then(function () { btn.disabled = false; btn.textContent = 'Save slideshow'; });
   });
 
-  api('/api/slideshow').then(function (data) {
+  /* ---------- gallery (delete / restore photos) ---------- */
+  var glHidden = [];
+
+  function applyHidden(ids) {
+    glHidden = ids.slice();
+    NNPAGallery.setHidden(glHidden);
+    ssPhotos = NNPAGallery.getAllPhotos();                       // the slideshow tab only offers photos still in the gallery
+    Object.keys(ssSelected).forEach(function (id) {
+      if (glHidden.indexOf(id) !== -1) delete ssSelected[id];
+    });
+  }
+
+  function renderGalleryTab() {
+    var all = NNPAGallery.getAllPhotos(true);
+    var live = all.filter(function (p) { return !p.hidden; });
+    var gone = all.filter(function (p) { return p.hidden; });
+    $('cnt-gallery').textContent = live.length;
+    $('glGrid').innerHTML = live.map(function (p) {
+      return '<div class="ss-card" data-id="' + esc(p.id) + '">' +
+        '<div class="pic"><img src="' + esc(p.src) + '" alt="' + esc(p.alt) + '" loading="lazy"></div>' +
+        '<div class="meta"><div class="lbl">' + esc(p.label) + '</div>' +
+        '<button type="button" class="ss-delete" data-act="delete">Delete from gallery</button></div></div>';
+    }).join('') || '<div class="admin-empty">The gallery is empty.</div>';
+    $('glRemovedTitle').hidden = !gone.length;
+    $('glRemovedGrid').innerHTML = gone.map(function (p) {
+      return '<div class="ss-card removed" data-id="' + esc(p.id) + '">' +
+        '<div class="pic"><img src="' + esc(p.src) + '" alt="' + esc(p.alt) + '" loading="lazy"></div>' +
+        '<div class="meta"><div class="lbl">' + esc(p.label) + '</div>' +
+        '<button type="button" class="ss-toggle" data-act="restore">Restore to gallery</button></div></div>';
+    }).join('');
+  }
+
+  function saveHidden(next, okMessage, btn) {
+    if (btn) btn.disabled = true;
+    var wasClean = (ssSignature() === ssSaved);
+    return api('/api/gallery-hidden', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ hidden: next }) })
+      .then(function (data) {
+        applyHidden(data.hidden);
+        if (wasClean) ssSaved = ssSignature();                      // photos dropped by a delete aren't "unsaved changes"
+        renderGalleryTab(); renderSlideshow(); toast(okMessage);
+      })
+      .catch(function (err) { if (btn) btn.disabled = false; toast(err.message || 'Could not update the gallery'); });
+  }
+
+  $('glGrid').addEventListener('click', function (e) {
+    var btn = e.target.closest('[data-act="delete"]'); if (!btn) return;
+    var id = btn.closest('.ss-card').getAttribute('data-id');
+    var photo = NNPAGallery.getAllPhotos(true).filter(function (p) { return p.id === id; })[0];
+    if (!confirm('Delete "' + (photo ? photo.label : 'this photo') + '" from the gallery?\n\nIt disappears from the Gallery page and the homepage slideshow straight away. You can bring it back later from "Deleted photos".')) return;
+    saveHidden(glHidden.concat([id]), 'Photo deleted from the gallery', btn);
+  });
+  $('glRemovedGrid').addEventListener('click', function (e) {
+    var btn = e.target.closest('[data-act="restore"]'); if (!btn) return;
+    var id = btn.closest('.ss-card').getAttribute('data-id');
+    saveHidden(glHidden.filter(function (x) { return x !== id; }), 'Photo restored to the gallery', btn);
+  });
+
+  api('/api/gallery-hidden').catch(function () { return { hidden: [] }; }).then(function (d) {
+    applyHidden(d && Array.isArray(d.hidden) ? d.hidden : []);
+    renderGalleryTab();
+    return api('/api/slideshow');
+  }).then(function (data) {
     if (data && Array.isArray(data.ids)) {
       ssUsingDefaults = false;
       data.ids.forEach(function (id) { ssSelected[id] = true; });
@@ -797,7 +889,7 @@
   });
 
   var startTab = (location.hash || '').replace('#', '');
-  if (['register', 'applications', 'slideshow', 'enquiries'].indexOf(startTab) !== -1) showTab(startTab);
+  if (['register', 'applications', 'slideshow', 'gallery', 'enquiries'].indexOf(startTab) !== -1) showTab(startTab);
 })();
 </script>
 

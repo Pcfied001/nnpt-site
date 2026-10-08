@@ -8,7 +8,7 @@
    status: 'open' or 'closed' controls the entry pill shown.
    ============================================================ */
 
-var NNPT_FIXTURES = [
+var NNPA_FIXTURES = [
   {
     id: 'fx-1',
     dateLabel: 'SEP 06',
@@ -33,14 +33,14 @@ var NNPT_FIXTURES = [
   {
     id: 'fx-4',
     dateLabel: 'DEC 14',
-    fixture: 'Team Anniversary Cup',
+    fixture: 'Association Anniversary Cup',
     venue: 'Guards Polo Club Abuja',
     status: 'closed'
   }
 ];
 
-var NNPTFixtures = {
+var NNPAFixtures = {
   getAll: function () {
-    return NNPT_FIXTURES.slice();
+    return NNPA_FIXTURES.slice();
   }
 };

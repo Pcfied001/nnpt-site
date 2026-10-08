@@ -176,7 +176,17 @@ router.patch('/:id', asyncHandler(async (req, res) => {
   res.json(withComputed(member));
 }));
 
-// NOTE: there is deliberately no DELETE. Records are permanent — to retire someone from
-// active use, set their status to "archived" and they stay on the register with full history.
+// Permanently remove someone from the register (secretariat login required, like the rest of this file).
+// Setting the status to "archived" is the gentler option and keeps the history — delete is for
+// records that should not be there at all (duplicates, mistakes, test entries).
+router.delete('/:id', asyncHandler(async (req, res) => {
+  const id = Number(req.params.id);
+  const member = await getMember(id);
+  if (!member) return res.status(404).json({ error: 'Record not found' });
+  const result = await getDb().collection('members').deleteOne({ id });
+  if (!result.deletedCount) return res.status(404).json({ error: 'Record not found' });
+  console.log('Register record deleted:', member.memberNo, member.fullName, 'by', actorOf(req));
+  res.json({ deleted: true, id });
+}));
 
 module.exports = router;
