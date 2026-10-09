@@ -11,9 +11,8 @@
     "cors": "^2.8.5",
     "dotenv": "^17.4.2",
     "express": "^4.19.2",
-    "mongodb": "^6.8.0",
     "express-basic-auth": "^1.2.1",
-    "nodemailer": "^9.0.5",
+    "mongodb": "^6.8.0",
     "pdfkit": "^0.19.1"
   }
 }
