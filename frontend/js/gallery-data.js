@@ -259,8 +259,8 @@ var NNPA_GALLERY_PHOTOS = [
     id: 'gallery-31',
     src: 'assets/img/gallery-31.jpg',
     alt: 'A smiling rider in a navy blue jersey reaching out with his mallet while other riders close in during a polo match',
-    label: 'In Play',
-    caption: 'A smiling player in navy blue reaches with his mallet as riders close in during a lively passage of play.',
+    label: 'Team Captain In Play',
+    caption: 'A Smiling Team Captain in navy blue reaches with his mallet as riders close in during a lively passage of play.',
     defaultFeatured: false
   },
   {
